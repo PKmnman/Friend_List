@@ -1,0 +1,35 @@
+package com.friend;
+
+import com.friend.gui.MainMenu;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
+public class FriendApp extends Application {
+
+	//This is the main method for the final program using the GUI
+	//
+	//DO NOT USE THIS MAIN METHOD TO TEST THE PROGRAM
+	//
+	//Use the main method of the TestDriver class for testing
+	public static void main(String[] args) {
+		//DO NOT MODIFY
+		Application.launch(FriendApp.class, args);
+	}
+
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		MainMenu mainMenu = new MainMenu();
+		mainMenu.init();
+
+		Scene appScene = new Scene(mainMenu);
+
+		primaryStage.setOnShowing(this::loadFriendList);
+		primaryStage.setScene(appScene);
+	}
+
+	private void loadFriendList(WindowEvent e){
+		//TODO: Load the list of friends from a file
+	}
+}
