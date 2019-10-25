@@ -5,9 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -20,7 +18,6 @@ public class MainMenu extends BorderPane {
 	private static final URL FXML_FILE = MainMenu.class.getResource("/com/friend/gui/fxml/MainMenu.fxml");
 
 	private AddDialog addDialog;
-	private TableContextMenu tcm;
 
 	@FXML private TableView<Friend> displayTable;
 	@FXML private TableColumn<Friend, String> firstNameColumn;
