@@ -30,6 +30,31 @@ public class Friend {
 		this(firstName, lastName, new PhoneNumber(phoneNumber));
 	}
 
+	public String getFirstName(){
+		return this.firstName;
+	}
+
+	public void setFirstName(String firstName){
+		this.firstName = firstName;
+	}
+
+	public String getLastName(){
+		return this.lastName;
+	}
+
+	public void setLastName(String lastName){
+		this.lastName = lastName;
+	}
+
+
+	public PhoneNumber getPhoneNumber(){
+		return this.phoneNumber;
+	}
+
+	public void setPhoneNumber (PhoneNumber number){
+		this.phoneNumber = number;
+	}
+
 	/**
 	 * Reads and returns a new {@link Friend} object from a {@link RandomAccessFile}.
 	 * @param file
