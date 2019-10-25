@@ -1,6 +1,7 @@
 package com.friend.gui;
 
 import com.friend.Friend;
+import com.friend.PhoneNumber;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,6 +23,7 @@ public class MainMenu extends BorderPane {
 	@FXML private TableView<Friend> displayTable;
 	@FXML private TableColumn<Friend, String> firstNameColumn;
 	@FXML private TableColumn<Friend, String> lastNameColumn;
+	@FXML private TableColumn<Friend, PhoneNumber> phoneNumberColumn;
 
 	public MainMenu(){
 		if(FXML_FILE == null){
@@ -40,6 +42,8 @@ public class MainMenu extends BorderPane {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		this.setMinSize(600, 400);
 
 		firstNameColumn.setCellValueFactory(new PropertyValueFactory("firstName"));
 

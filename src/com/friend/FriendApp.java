@@ -27,7 +27,10 @@ public class FriendApp extends Application {
 
 		primaryStage.setOnShowing(this::loadFriendList);
 		primaryStage.setScene(appScene);
-
+		primaryStage.sizeToScene();
+		primaryStage.setMinWidth(640);
+		primaryStage.setMinHeight(448);
+		primaryStage.setResizable(true);
 		primaryStage.show();
 	}
 

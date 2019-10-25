@@ -57,7 +57,7 @@ public class Friend {
 	}
 
 	public void write(RandomAccessFile file){
-
+		//TODO: Implement write functionality
 	}
 
 	public static int size(){
