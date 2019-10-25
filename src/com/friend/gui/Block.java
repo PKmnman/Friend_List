@@ -3,13 +3,14 @@ package com.friend.gui;
 import com.friend.Friend;
 
 public class Block {
-    private static Friend friendObject = new Friend();
+    private static Friend friendObject;
     private static int prev;
     private static int next;
 
 
 
     public Block(){
+        friendObject = new Friend();
         this.prev = -1;
         this.next = -1;
     }
@@ -19,6 +20,10 @@ public class Block {
         this.friendObject.setLastName(person.getLastName());
         this.friendObject.setPhoneNumber(person.getPhoneNumber());
 
+    }
+
+    public Block(String firstName,String lastName, String phoneNumber){
+        friendObject = new Friend(firstName,lastName,phoneNumber);
     }
 
     public void setPrev(int prevNum){
