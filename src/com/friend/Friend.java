@@ -32,8 +32,8 @@ public class Friend {
 
 	/**
 	 * Reads and returns a new {@link Friend} object from a {@link RandomAccessFile}.
-	 * @param file
-	 * @return
+	 * @param file the file to read from
+	 * @return the friend object contained in the {@code RandomAccessFile}
 	 * @throws IOException
 	 */
 	public static Friend read(RandomAccessFile file) throws IOException {
