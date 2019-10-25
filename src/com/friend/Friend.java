@@ -64,4 +64,12 @@ public class Friend {
 		return BYTE_SIZE;
 	}
 
+	public String getFirstName(){
+		return firstName;
+	}
+
+	public String getLastName(){
+		return lastName;
+	}
+
 }

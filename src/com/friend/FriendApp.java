@@ -27,6 +27,8 @@ public class FriendApp extends Application {
 
 		primaryStage.setOnShowing(this::loadFriendList);
 		primaryStage.setScene(appScene);
+
+		primaryStage.show();
 	}
 
 	private void loadFriendList(WindowEvent e){

@@ -6,13 +6,14 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
 
-class AddDialog extends Dialog<Friend> {
+class AddDialog extends VBox {
 
-	private static final URL FXML_FILE = AddDialog.class.getResource("com/friend/gui/fxml/AddDialog.fxml");
+	private static final URL FXML_FILE = AddDialog.class.getResource("/com/friend/gui/fxml/AddDialog.fxml");
 
 	private FXMLLoader loader;
 
@@ -22,17 +23,8 @@ class AddDialog extends Dialog<Friend> {
 
 	void init(){
 		loader.setLocation(FXML_FILE);
+		loader.setRoot(this);
 		loader.setController(this);
-
-		try {
-			this.setDialogPane(loader.load());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		ButtonType confirmButton = new ButtonType("Confirm", ButtonBar.ButtonData.OK_DONE);
-
-		this.getDialogPane().getButtonTypes().add(confirmButton);
 	}
 
 
