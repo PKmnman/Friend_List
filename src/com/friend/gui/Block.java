@@ -4,8 +4,9 @@ import com.friend.Friend;
 
 public class Block {
     private static Friend friendObject;
-    private static int prev;
-    private static int next;
+    private static long prev;
+    private static long next;
+    private static final int BYTE_SIZE = 16;
 
 
 
@@ -26,21 +27,23 @@ public class Block {
         friendObject = new Friend(firstName,lastName,phoneNumber);
     }
 
-    public void setPrev(int prevNum){
+    public void setPrev(long prevNum){
         this.prev = prevNum;
     }
 
-    public int getPrev(){
+    public long getPrev(){
         return this.prev;
     }
 
-    public void setNext(int nextNum){
+    public void setNext(long nextNum){
         this.next = nextNum;
     }
 
-    public int getNext(){
+    public long getNext(){
         return this.next;
     }
+
+    public int getByteSize(){return  this.getByteSize();}
 
 
 }
