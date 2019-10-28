@@ -32,41 +32,34 @@ public class TestDriver {
 				new Friend("John", "Doe", "2037772424"),
 				new Friend("Blah", "Blah", "7245556983")
 		};
-
-		ArrayList<Block> blocks = new ArrayList<>(4);
-
-		//Initialize the blocks
-		for (long i = 0; i < friends.length * Block.BYTES; i += Block.BYTES) {
-			Block b = new Block(friends[(int)(i / Block.BYTES)]);
-			if(i == 0L){
-				b.setPrev(0L);
-			}else{
-				b.setPrev(i - Block.BYTES);
-			}
-
-			if(i == ((friends.length - 1) * Block.BYTES)){
-				b.setNext(0x0000000000000000L);
-			}else{
-				b.setNext(i + Block.BYTES + 1);
-			}
-
-			blocks.add(b);
-		}
-
-		System.out.printf("Writing %d Blocks to \"%s\"...%n", blocks.size(), TEST_FILE);
+		
+		file.writeLong(-1L);
+		file.writeLong(16L);
+		
+		System.out.printf("Writing %d Blocks to \"%s\"...%n", 100, TEST_FILE);
 		pause(2000);
-
-		//Write blocks to file
-		for (int i = 0; i < blocks.size(); i++) {
-			blocks.get(i).writeObject(file);
+		
+		Friend f = new Friend();
+		Block b = new Block(f, -1, Block.BYTES);
+		
+		long prev = file.getFilePointer();
+		
+		//Initialize the blocks
+		for (int i = 0; i < 100; i++) {
+			b.writeObject(file);
+			b.setPrev(prev);
+			if(i < (100 - 1)){
+				b.setNext(file.getFilePointer() + Block.BYTES);
+			}else{
+				b.setNext(-1);
+			}
+			prev += Block.BYTES;
 		}
 
-		/*for (int i = 0; i < friends.length; i++) {
-			friends[i].write(file);
-		}*/
+		
 
 		System.out.println("Blocks written to file!\n");
-
+		
 		//Close the file
 		file.close();
 
@@ -76,10 +69,6 @@ public class TestDriver {
 		pause(1500);
 		read(file);
 
-		/*for (int i = 0; i < 4; i++) {
-			System.out.println(Friend.readObject(file));
-		}*/
-
 		file.close();
 
 		System.out.println("\nDone!!!");
@@ -87,12 +76,28 @@ public class TestDriver {
 	}
 
 	public static void read(RandomAccessFile file) throws IOException{
-		Block[] blocks = Block.readFile(file);
-
-		for (int i = 0; i < blocks.length; i++) {
-			System.out.print(blocks[i] + " ");
-			System.out.print(blocks[i].getData());
-			System.out.println();
+		long a = file.readLong();
+		System.out.printf("[Offset = %#010x]: %#010x%n", file.getFilePointer(), a);
+		long b = file.readLong();
+		System.out.printf("[Offset = %#010x]: %#010x%n", file.getFilePointer(), a);
+		System.out.println("--------------------------------------------------------------------------------------------------");
+		Block block = new Block();
+		
+		boolean eof = false;
+		
+		while(!eof){
+			try{
+				long loc = file.getFilePointer();
+				block.readObject(file);
+				
+				System.out.printf("OFFSET = %d%n", loc);
+				System.out.printf("%s%n", block.getData());
+				System.out.printf("Prev = %-5d Next = %-5d%n", block.getPrev(), block.getNext());
+				System.out.println("------------------------------------------");
+				
+			}catch (IOException e){
+				eof = true;
+			}
 		}
 	}
 

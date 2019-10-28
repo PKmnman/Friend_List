@@ -51,16 +51,17 @@ public class Block {
 
 	    file.write(prevPointer);
 	    file.write(nextPointer);*/
-
+		if(friendObject != null){
+			friendObject.write(file);
+		}else{
+			new Friend().write(file);
+		}
+		
     	file.writeLong(this.prev);
     	file.writeLong(this.next);
 
 	    //Writes a default friend in the event this block doesn't have a friend object
-    	if(friendObject != null){
-		    friendObject.write(file);
-	    }else{
-    		new Friend().write(file);
-	    }
+    	
     }
 
     public static Block[] readFile(RandomAccessFile file) throws IOException{
@@ -80,12 +81,9 @@ public class Block {
     }
 
     public void readObject(RandomAccessFile file) throws IOException{
-	    this.prev = 0L;
-	    this.next = 0L;
-
-	    this.prev = file.readLong();
+		this.friendObject.read(file);
+    	this.prev = file.readLong();
 	    this.next = file.readLong();
-    	this.friendObject.read(file);
     }
 
     public void setPrev(long prevNum){
