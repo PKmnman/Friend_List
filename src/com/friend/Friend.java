@@ -1,7 +1,12 @@
 package com.friend;
 
+import com.sun.javafx.binding.StringFormatter;
+
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
+import java.util.Formatter;
+import java.util.Locale;
 
 public class Friend {
 
@@ -9,25 +14,31 @@ public class Friend {
 	private static final PhoneNumber DEFAULT_NUMBER = new PhoneNumber("(000)-000-0000");
 	private static final int MAX_NAME_LENGTH = 15;
 
-	private static final int BYTE_SIZE = 30 + PhoneNumber.NUMBER_SIZE;
+	public static final int BYTES = ((Character.BYTES * MAX_NAME_LENGTH) * 2) + PhoneNumber.BYTES;
 
 	private String lastName, firstName;
 	private PhoneNumber phoneNumber;
 
-	public Friend(){
-		lastName = DEFAULT_NAME;
-		firstName = DEFAULT_NAME;
-		phoneNumber = new PhoneNumber("2031001000");
-	}
-
 	public Friend(String firstName, String lastName, PhoneNumber phoneNumber){
-		this.lastName = lastName;
-		this.firstName = firstName;
+		StringBuffer buff = new StringBuffer(firstName);
+		buff.setLength(15);
+
+		this.firstName = buff.toString();
+
+		buff = new StringBuffer(lastName);
+		buff.setLength(15);
+
+		this.lastName = buff.toString();
+
 		this.phoneNumber = phoneNumber;
 	}
 
 	public Friend(String firstName, String lastName, String phoneNumber){
 		this(firstName, lastName, new PhoneNumber(phoneNumber));
+	}
+
+	public Friend(){
+		this(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_NUMBER);
 	}
 
 	/**
@@ -36,32 +47,63 @@ public class Friend {
 	 * @return the friend object contained in the {@code RandomAccessFile}
 	 * @throws IOException
 	 */
-	public static Friend read(RandomAccessFile file) throws IOException {
-		char[] lastName = new char[15];
-		char[] firstName = new char[15];
+	public static Friend readObject(RandomAccessFile file) throws IOException {
+		byte[] lastName = new byte[Character.BYTES * 15];
+		byte[] firstName = new byte[Character.BYTES * 15];
 
-		for (int i = 0; i < lastName.length; i++) {
-			lastName[i] = file.readChar();
-		}
+		file.read(firstName);
+		String first = new String(firstName, 0, firstName.length, StandardCharsets.US_ASCII);
 
-		for (int i = 0; i < firstName.length; i++) {
-			firstName[i] = file.readChar();
-		}
+		file.read(lastName);
+		String last = new String(lastName, 0, lastName.length, StandardCharsets.US_ASCII);
 
-		PhoneNumber phone= PhoneNumber.read(file);
-
-		String first = new String(firstName);
-		String last = new String(lastName);
+		PhoneNumber phone = PhoneNumber.read(file);
 
 		return new Friend(first, last, phone);
 	}
 
-	public void write(RandomAccessFile file){
-		//TODO: Implement write functionality
+	public void read(RandomAccessFile file) throws IOException{
+		byte[] lastName = new byte[Character.BYTES * 15];
+		byte[] firstName = new byte[Character.BYTES * 15];
+
+		file.read(firstName);
+		this.firstName = new String(firstName, 0, firstName.length, StandardCharsets.UTF_8);
+
+		file.read(lastName);
+		this.lastName = new String(lastName, 0, lastName.length, StandardCharsets.UTF_8);
+
+		this.phoneNumber = PhoneNumber.read(file);
 	}
 
-	public static int size(){
-		return BYTE_SIZE;
+	public void write(RandomAccessFile file) throws IOException{
+		//TODO: Implement write functionality
+
+		StringBuffer buf;
+		if (firstName != null){
+			buf = new StringBuffer(this.firstName);
+		}
+		else {
+			buf = new StringBuffer(MAX_NAME_LENGTH);
+		}
+
+		buf.setLength(MAX_NAME_LENGTH);
+		file.writeChars(buf.toString());
+
+		if (lastName != null){
+			buf = new StringBuffer(this.lastName);
+		}
+		else {
+			buf = new StringBuffer(MAX_NAME_LENGTH);
+		}
+
+		buf.setLength(MAX_NAME_LENGTH);
+		file.writeChars(buf.toString());
+
+		phoneNumber.write(file);
+	}
+
+	public int size(){
+		return BYTES;
 	}
 
 	public String getFirstName(){
@@ -80,13 +122,24 @@ public class Friend {
 		this.lastName = lastName;
 	}
 
-
 	public PhoneNumber getPhoneNumber(){
 		return this.phoneNumber;
 	}
 
 	public void setPhoneNumber (PhoneNumber number){
 		this.phoneNumber = number;
+	}
+
+	public String toString(){
+		Formatter fmt = new Formatter(Locale.US);
+
+
+		fmt.format("%-5s %s\t\t%s | ", "Name:", lastName, firstName);
+		fmt.format("%-6s %s", "Phone:", phoneNumber);
+
+		fmt.flush();
+
+		return fmt.toString();
 	}
 
 }

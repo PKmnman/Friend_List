@@ -12,7 +12,7 @@ public class FriendApp extends Application {
 	//
 	//DO NOT USE THIS MAIN METHOD TO TEST THE PROGRAM
 	//
-	//Use the main method of the TestDriver class for testing
+	//Use the main method of the com.friend.TestDriver class for testing
 	public static void main(String[] args) {
 		//DO NOT MODIFY
 		Application.launch(FriendApp.class, args);

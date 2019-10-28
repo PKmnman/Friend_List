@@ -13,9 +13,9 @@ public class PhoneNumber {
 	/**
 	 * This is the size of all {@link PhoneNumber} objects in bytes.
 	 */
-	public static final int NUMBER_SIZE = 5;
+	public static final int BYTES = 5;
 
-	private static final byte BIT_MASK = (byte)0x0F;
+	private static final int BIT_MASK = 0x000F;
 	private static final short DIGIT_SIZE = 4;
 	private static final short ARRAY_SIZE = 5;
 
@@ -72,7 +72,7 @@ public class PhoneNumber {
 	}
 
 	public static PhoneNumber read(RandomAccessFile file) throws IOException{
-		byte[] digits = new byte[NUMBER_SIZE];
+		byte[] digits = new byte[BYTES];
 		file.read(digits);
 		return new PhoneNumber(digits);
 	}
