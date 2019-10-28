@@ -1,10 +1,12 @@
 package com.friend;
 
 import com.sun.javafx.binding.StringFormatter;
+import com.sun.xml.internal.ws.util.StringUtils;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
+import java.util.Formattable;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -67,10 +69,10 @@ public class Friend {
 		byte[] firstName = new byte[Character.BYTES * 15];
 
 		file.read(firstName);
-		this.firstName = new String(firstName, 0, firstName.length, StandardCharsets.UTF_8);
+		this.firstName = new String(firstName);
 
 		file.read(lastName);
-		this.lastName = new String(lastName, 0, lastName.length, StandardCharsets.UTF_8);
+		this.lastName = new String(lastName);
 
 		this.phoneNumber = PhoneNumber.read(file);
 	}
@@ -131,15 +133,7 @@ public class Friend {
 	}
 
 	public String toString(){
-		Formatter fmt = new Formatter(Locale.US);
-
-
-		fmt.format("%-5s %s\t\t%s | ", "Name:", lastName, firstName);
-		fmt.format("%-6s %s", "Phone:", phoneNumber);
-
-		fmt.flush();
-
-		return fmt.toString();
+		return String.format("Name: %-16s%-16s%s", firstName, lastName, phoneNumber);
 	}
 
 }
