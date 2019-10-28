@@ -1,14 +1,8 @@
 package com.friend;
 
-import com.sun.javafx.binding.StringFormatter;
-import com.sun.xml.internal.ws.util.StringUtils;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.charset.StandardCharsets;
-import java.util.Formattable;
-import java.util.Formatter;
-import java.util.Locale;
 
 public class Friend {
 
