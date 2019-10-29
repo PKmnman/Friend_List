@@ -104,4 +104,26 @@ public class TestDriver {
 		}
 	}
 
+	public static void printFile(RandomAccessFile file) {
+		long v;
+		try {
+			v = file.readLong();
+			System.out.println(v);
+			v = file.readLong();
+			System.out.println(v);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		while (true) {
+			long loc = file.getFilePointer();
+			Block b = new Block();
+			b.readObject(file);
+			System.out.printf("OFFSET %d %n", loc);
+			System.out.printf("%s %n", b.getData());
+			System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(),b.getNext());
+		}
+
+	}
+
 }
