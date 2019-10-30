@@ -12,27 +12,20 @@ public class TestDriver {
 	
 	private static final int NUM_OF_FRIENDS = 10;
 
+	//Static initializer for TEST_FILE
 	static{
 		try {
 			TEST_FILE = new File(TestDriver.class.getResource("/files/testFile.dat").toURI());
 		} catch (URISyntaxException e) {
+			//End program if we fail to load the file
 			System.err.println("Error loading file");
 			System.exit(-1);
 		}
 	}
 
 	public static void main(String[] args) throws IOException{
-
-		File output = new File("C:/Users/heric/IdeaProjects/Friend_List/output.txt");
 		
-		if(!output.createNewFile()){
-			output.delete();
-			output.createNewFile();
-		}
-		
-		OutputStream fOut = Files.newOutputStream(output.toPath(), StandardOpenOption.WRITE);
-		
-		//System.setOut(new PrintStream(fOut));
+		//setFileOut(new File("./output.txt"));
 		
 		RandomAccessFile file = new RandomAccessFile(TEST_FILE, "rw");;
 		
@@ -62,12 +55,22 @@ public class TestDriver {
 		
 		file.close();
 		
-		
 		file = new RandomAccessFile(TEST_FILE, "r");
 		read(file);
 		
 		System.out.println("\nDone!!!");
 
+	}
+	
+	private static void setFileOut(File output) throws IOException {
+		if(!output.createNewFile()){
+			output.delete();
+			output.createNewFile();
+		}
+		
+		OutputStream fOut = Files.newOutputStream(output.toPath(), StandardOpenOption.WRITE);
+		
+		System.setOut(new PrintStream(fOut));
 	}
 	
 	private static void createFile(RandomAccessFile file) throws IOException {
