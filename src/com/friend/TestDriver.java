@@ -12,20 +12,27 @@ public class TestDriver {
 	
 	private static final int NUM_OF_FRIENDS = 10;
 
-	//Static initializer for TEST_FILE
 	static{
 		try {
 			TEST_FILE = new File(TestDriver.class.getResource("/files/testFile.dat").toURI());
 		} catch (URISyntaxException e) {
-			//End program if we fail to load the file
 			System.err.println("Error loading file");
 			System.exit(-1);
 		}
 	}
 
 	public static void main(String[] args) throws IOException{
+
+		File output = new File("C:/Users/jayne/IdeaProjects/Friend_List/output.txt");
 		
-		//setFileOut(new File("./output.txt"));
+		if(!output.createNewFile()){
+			output.delete();
+			output.createNewFile();
+		}
+		
+		OutputStream fOut = Files.newOutputStream(output.toPath(), StandardOpenOption.WRITE);
+		
+		//System.setOut(new PrintStream(fOut));
 		
 		RandomAccessFile file = new RandomAccessFile(TEST_FILE, "rw");;
 		
@@ -49,29 +56,18 @@ public class TestDriver {
 		
 		System.out.println("\nAdding new friend\n");
 		
-		//Add friends
 		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
-		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
+		addFriend(file, new Friend("Jayne", "Sabovik", "2031122200"));
 		addFriend(file, new Friend("Ricky", "He", "2153596726"));
 		
 		file.close();
+		
 		
 		file = new RandomAccessFile(TEST_FILE, "r");
 		read(file);
 		
 		System.out.println("\nDone!!!");
 
-	}
-	
-	private static void setFileOut(File output) throws IOException {
-		if(!output.createNewFile()){
-			output.delete();
-			output.createNewFile();
-		}
-		
-		OutputStream fOut = Files.newOutputStream(output.toPath(), StandardOpenOption.WRITE);
-		
-		System.setOut(new PrintStream(fOut));
 	}
 	
 	private static void createFile(RandomAccessFile file) throws IOException {
@@ -106,7 +102,16 @@ public class TestDriver {
 		System.out.printf("[Offset = %d]: %d%n", loc, b);
 		System.out.println("--------------------------------------------------------------------------------------------------");
 		Block block = new Block();
-		
+
+		loc = file.getFilePointer();
+		block.readObject(file);
+
+		System.out.printf("OFFSET = %d%n", loc);
+		System.out.printf("%s%n", block.getData());
+		System.out.printf("Prev = %-5d Next = %-5d%n", block.getPrev(), block.getNext());
+
+		System.out.println("------------------------------------------");
+
 		boolean eof = false;
 		
 		while(!eof){
@@ -174,13 +179,27 @@ public class TestDriver {
 			e.printStackTrace();
 		}
 		try {
+			long loc = file.getFilePointer();
+			Block b = new Block();
+			b.readObject(file);
+			System.out.printf("OFFSET %d %n", loc);
+			System.out.printf("%s %n", b.getData());
+			System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(), b.getNext()+16);
 			while (true) {
-				long loc = file.getFilePointer();
-				Block b = new Block();
+				loc = file.getFilePointer();
+				b = new Block();
 				b.readObject(file);
 				System.out.printf("OFFSET %d %n", loc);
 				System.out.printf("%s %n", b.getData());
-				System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(), b.getNext());
+				long newLoc = file.getFilePointer();
+				RandomAccessFile temp = file;
+				read(temp);
+				long fileSize = temp.getFilePointer();
+				if (newLoc == fileSize) {
+					System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(), -1);
+				} else {
+					System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(), b.getNext());
+				}
 			}
 		} catch (EOFException eof){
 			System.err.println(eof.getMessage());
