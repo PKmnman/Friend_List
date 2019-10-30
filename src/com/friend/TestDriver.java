@@ -32,46 +32,26 @@ public class TestDriver {
 		
 		OutputStream fOut = Files.newOutputStream(output.toPath(), StandardOpenOption.WRITE);
 		
-		System.setOut(new PrintStream(fOut));
+		//System.setOut(new PrintStream(fOut));
 		
 		RandomAccessFile file = new RandomAccessFile(TEST_FILE, "rw");;
 		
 		file.writeLong(-1L);
 		file.writeLong(16L);
 		
-		System.out.printf("Writing %d Blocks to \"%s\"...%n", 100, TEST_FILE);
-		pause(2000);
-		
-		Friend f = new Friend();
-		Block b = new Block(f, -1, Block.BYTES);
-		
-		long prev = file.getFilePointer();
-		
-		//Initialize the blocks
-		for (int i = 0; i < NUM_OF_FRIENDS; i++) {
-			b.writeObject(file);
-			b.setPrev(prev);
-			if(i < (NUM_OF_FRIENDS - 1)){
-				b.setNext(file.getFilePointer() + Block.BYTES);
-			}else{
-				b.setNext(-1);
-			}
-			prev += Block.BYTES;
-		}
-
-		
+		createFile(file);
 
 		System.out.println("Blocks written to file!\n");
 		
 		//Close the file
 		file.close();
 
+		//Re-open File
 		file = new RandomAccessFile(TEST_FILE, "rw");
-
-		System.out.printf("Reading \"%s\"...%n%n", TEST_FILE);
-		pause(1500);
+		
+		//Read and print to std::out
 		read(file);
-
+		//Seek to beginning
 		file.seek(0);
 		
 		System.out.println("\nAdding new friend\n");
@@ -89,14 +69,37 @@ public class TestDriver {
 		System.out.println("\nDone!!!");
 
 	}
-
+	
+	private static void createFile(RandomAccessFile file) throws IOException {
+		System.out.printf("Writing %d Blocks to \"%s\"...%n", NUM_OF_FRIENDS, TEST_FILE);
+		Friend f = new Friend();
+		Block b = new Block(f, -1, Block.BYTES + 16);
+		
+		long prev = file.getFilePointer();
+		
+		b.writeObject(file);
+		
+		//Write The blocks to the file
+		for (int i = 0; i < NUM_OF_FRIENDS - 1; i++) {
+			b.setPrev(prev);
+			b.setNext(file.getFilePointer() + Block.BYTES);
+			b.writeObject(file);
+			prev = file.getFilePointer();
+		}
+		
+		b.setNext(-1);
+		b.setPrev(prev);
+		b.writeObject(file);
+	}
+	
 	public static void read(RandomAccessFile file) throws IOException{
+		System.out.printf("Reading \"%s\"...%n%n", TEST_FILE);
 		long loc = file.getFilePointer();
 		long a = file.readLong();
-		System.out.printf("[Offset = %#010x]: %#010x%n", loc, a);
+		System.out.printf("[Offset = %d]: %d%n", loc, a);
 		loc = file.getFilePointer();
 		long b = file.readLong();
-		System.out.printf("[Offset = %#010x]: %#010x%n", loc, b);
+		System.out.printf("[Offset = %d]: %d%n", loc, b);
 		System.out.println("--------------------------------------------------------------------------------------------------");
 		Block block = new Block();
 		
