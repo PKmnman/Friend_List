@@ -23,7 +23,7 @@ public class TestDriver {
 
 	public static void main(String[] args) throws IOException{
 
-		File output = new File("C:/Users/ksrot/Dropbox/Java Programs/Friend_List/output.txt");
+		File output = new File("C:/Users/heric/IdeaProjects/Friend_List/output.txt");
 		
 		if(!output.createNewFile()){
 			output.delete();
@@ -78,7 +78,7 @@ public class TestDriver {
 		
 		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
 		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
-		
+		addFriend(file, new Friend("Ricky", "He", "2153596726"));
 		
 		file.close();
 		
