@@ -1,6 +1,5 @@
-package com.friend;
+package com.friend.gui;
 
-import com.friend.gui.MainMenu;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;

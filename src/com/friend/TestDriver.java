@@ -49,6 +49,7 @@ public class TestDriver {
 		
 		System.out.println("\nAdding new friend\n");
 		
+		//Add friends
 		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
 		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
 		addFriend(file, new Friend("Ricky", "He", "2153596726"));
