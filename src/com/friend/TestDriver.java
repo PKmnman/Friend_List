@@ -1,5 +1,6 @@
 package com.friend;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -114,14 +115,19 @@ public class TestDriver {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		while (true) {
-			long loc = file.getFilePointer();
-			Block b = new Block();
-			b.readObject(file);
-			System.out.printf("OFFSET %d %n", loc);
-			System.out.printf("%s %n", b.getData());
-			System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(),b.getNext());
+		try {
+			while (true) {
+				long loc = file.getFilePointer();
+				Block b = new Block();
+				b.readObject(file);
+				System.out.printf("OFFSET %d %n", loc);
+				System.out.printf("%s %n", b.getData());
+				System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(), b.getNext());
+			}
+		} catch (EOFException eof){
+			System.err.println(eof.getMessage());
+		}catch (IOException ioe){
+			System.err.println(ioe.getMessage());
 		}
 
 	}
