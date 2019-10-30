@@ -1,14 +1,16 @@
 package com.friend;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.StandardOpenOption;
 
 public class TestDriver {
 
 	public static File TEST_FILE;
+	
+	private static final int NUM_OF_FRIENDS = 10;
 
 	static{
 		try {
@@ -21,17 +23,18 @@ public class TestDriver {
 
 	public static void main(String[] args) throws IOException{
 
-		PhoneNumber myNumber = new PhoneNumber("(203)-736-7606");
-
+		File output = new File("C:/Users/ksrot/Dropbox/Java Programs/Friend_List/output.txt");
+		
+		if(!output.createNewFile()){
+			output.delete();
+			output.createNewFile();
+		}
+		
+		OutputStream fOut = Files.newOutputStream(output.toPath(), StandardOpenOption.WRITE);
+		
+		System.setOut(new PrintStream(fOut));
+		
 		RandomAccessFile file = new RandomAccessFile(TEST_FILE, "rw");;
-
-		//Testing writing multiple blocks
-		Friend[] friends = new Friend[]{
-				new Friend("Gary", "Reeves", myNumber),
-				new Friend(),
-				new Friend("John", "Doe", "2037772424"),
-				new Friend("Blah", "Blah", "7245556983")
-		};
 		
 		file.writeLong(-1L);
 		file.writeLong(16L);
@@ -45,10 +48,10 @@ public class TestDriver {
 		long prev = file.getFilePointer();
 		
 		//Initialize the blocks
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < NUM_OF_FRIENDS; i++) {
 			b.writeObject(file);
 			b.setPrev(prev);
-			if(i < (100 - 1)){
+			if(i < (NUM_OF_FRIENDS - 1)){
 				b.setNext(file.getFilePointer() + Block.BYTES);
 			}else{
 				b.setNext(-1);
@@ -63,23 +66,37 @@ public class TestDriver {
 		//Close the file
 		file.close();
 
-		file = new RandomAccessFile(TEST_FILE, "r");
+		file = new RandomAccessFile(TEST_FILE, "rw");
 
 		System.out.printf("Reading \"%s\"...%n%n", TEST_FILE);
 		pause(1500);
 		read(file);
 
+		file.seek(0);
+		
+		System.out.println("\nAdding new friend\n");
+		
+		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
+		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
+		
+		
 		file.close();
-
+		
+		
+		file = new RandomAccessFile(TEST_FILE, "r");
+		read(file);
+		
 		System.out.println("\nDone!!!");
 
 	}
 
 	public static void read(RandomAccessFile file) throws IOException{
+		long loc = file.getFilePointer();
 		long a = file.readLong();
-		System.out.printf("[Offset = %#010x]: %#010x%n", file.getFilePointer(), a);
+		System.out.printf("[Offset = %#010x]: %#010x%n", loc, a);
+		loc = file.getFilePointer();
 		long b = file.readLong();
-		System.out.printf("[Offset = %#010x]: %#010x%n", file.getFilePointer(), a);
+		System.out.printf("[Offset = %#010x]: %#010x%n", loc, b);
 		System.out.println("--------------------------------------------------------------------------------------------------");
 		Block block = new Block();
 		
@@ -87,7 +104,7 @@ public class TestDriver {
 		
 		while(!eof){
 			try{
-				long loc = file.getFilePointer();
+				loc = file.getFilePointer();
 				block.readObject(file);
 				
 				System.out.printf("OFFSET = %d%n", loc);
@@ -98,7 +115,37 @@ public class TestDriver {
 			}catch (IOException e){
 				eof = true;
 			}
+			
 		}
+	}
+	
+	public static void addFriend(RandomAccessFile file, Friend friend){
+		
+		try {
+			file.seek(8);
+			long open = file.readLong();
+			
+			file.seek(open);
+			
+			Block b = new Block();
+			b.readObject(file);
+			
+			b.setData(friend);
+			
+			long newOpen = file.getFilePointer();
+			
+			file.seek(0);
+			file.writeLong(open);
+			file.writeLong(newOpen);
+			
+			file.seek(open);
+			
+			b.writeObject(file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 	}
 
 	public static void pause(long milli){
