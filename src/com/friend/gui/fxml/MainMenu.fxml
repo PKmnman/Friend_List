@@ -1,25 +1,30 @@
-<?language javascript?>
-
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!--Imports-->
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 
-<fx:root minHeight="-Infinity" minWidth="-Infinity" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
-    <fx:include source="AddDialog.fxml"/>
+<!--Main GUI Stuff-->
+
+<fx:root minHeight="400" minWidth="600" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.172-ea"
+         xmlns:fx="http://javafx.com/fxml/1">
     <top>
-        <MenuBar>
-            <Menu text="File">
-                <MenuItem text="New..."/>
-                <MenuItem text="Open..."/>
-                <MenuItem text="Load..."/>
-            </Menu>
-        </MenuBar>
+        <HBox>
+            <MenuButton text="File" contentDisplay="CENTER">
+                <Menu text="File">
+                    <MenuItem text="New..."/>
+                    <MenuItem text="Open..."/>
+                    <MenuItem text="Load..."/>
+                </Menu>
+            </MenuButton>
+        </HBox>
     </top>
    <center>
       <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minViewportHeight="200.0" minViewportWidth="570.0" minWidth="-Infinity" prefHeight="200.0" prefViewportHeight="200.0" prefViewportWidth="570.0" BorderPane.alignment="CENTER">
