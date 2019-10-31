@@ -10,10 +10,7 @@ public class TestDriver {
 	public static final URL TEST_FILE = TestDriver.class.getResource("/files/testFile.dat");
 	
 	private static final int NUM_OF_FRIENDS = 10;
-
 	
-	
-
 	public static void main(String[] args) throws IOException{
 		//Open binary file for read/write operations
 		RandomAccessFile file = new RandomAccessFile(new File(TEST_FILE.getPath()), "rw");;
