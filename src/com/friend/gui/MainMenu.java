@@ -8,11 +8,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -40,6 +43,7 @@ public class MainMenu extends BorderPane {
 	@FXML private TableColumn<Friend, String> lastNameColumn;
 	@FXML private TableColumn<Friend, PhoneNumber> phoneNumberColumn;
 	
+	@FXML private ContextMenu tableContextMenu;
 	/**
 	 * Default constructor for that constructs and loads the main menu UI.
 	 * <p>
@@ -79,6 +83,9 @@ public class MainMenu extends BorderPane {
 		firstNameColumn.setCellValueFactory(new PropertyValueFactory("firstName"));
 		lastNameColumn.setCellValueFactory(new PropertyValueFactory("lastName"));
 		
+		firstNameColumn.setCellFactory(new CellFactory());
+		lastNameColumn.setCellFactory(new CellFactory());
+		
 		//This is a test list
 		ObservableList<Friend> friends = FXCollections.observableArrayList();
 		friends.addAll(new Friend("Gary", "Reeves", "2037367606"), new Friend("Ted", "Test", "2036365421"));
@@ -91,5 +98,18 @@ public class MainMenu extends BorderPane {
 		//this.addDialog.init();
 	}
 
+	
+	private class CellFactory implements Callback<TableColumn<Friend, String>, TableCell<Friend, String>>{
+		
+		private CellFactory(){}
+		
+		@Override
+		public TableCell<Friend, String> call(TableColumn<Friend, String> param) {
+			TableCell<Friend, String> cell = new TableCell<>();
+			cell.setContextMenu(tableContextMenu);
+			return cell;
+		}
+		
+	}
 
 }
