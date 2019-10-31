@@ -1,37 +1,23 @@
 package com.friend;
 
 import java.io.*;
-import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 
 public class TestDriver {
 
-	public static File TEST_FILE;
+	public static final URL TEST_FILE = TestDriver.class.getResource("/files/testFile.dat");
 	
 	private static final int NUM_OF_FRIENDS = 10;
 
-	//Static initializer for TEST_FILE
-	static{
-		try {
-			TEST_FILE = new File(TestDriver.class.getResource("/files/testFile.dat").toURI());
-		} catch (URISyntaxException e) {
-			//End program if we fail to load the file
-			System.err.println("Error loading file");
-			System.exit(-1);
-		}
-	}
+	
+	
 
 	public static void main(String[] args) throws IOException{
-		
-		//setFileOut(new File("./output.txt"));
-		
-		RandomAccessFile file = new RandomAccessFile(TEST_FILE, "rw");;
-		
-		file.writeLong(-1L);
-		file.writeLong(16L);
-		
+		//Open binary file for read/write operations
+		RandomAccessFile file = new RandomAccessFile(new File(TEST_FILE.getPath()), "rw");;
+		//Create the file and populate it with blocks
 		createFile(file);
 
 		System.out.println("Blocks written to file!\n");
@@ -40,7 +26,7 @@ public class TestDriver {
 		file.close();
 
 		//Re-open File
-		file = new RandomAccessFile(TEST_FILE, "rw");
+		file = new RandomAccessFile(TEST_FILE.getPath(), "rw");
 		
 		//Read and print to std::out
 		read(file);
@@ -54,9 +40,11 @@ public class TestDriver {
 		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
 		addFriend(file, new Friend("Ricky", "He", "2153596726"));
 		
+		//Close the file
 		file.close();
 		
-		file = new RandomAccessFile(TEST_FILE, "r");
+		//Re-open the file for reading
+		file = new RandomAccessFile(TEST_FILE.getPath(), "r");
 		read(file);
 		
 		System.out.println("\nDone!!!");
@@ -75,6 +63,9 @@ public class TestDriver {
 	}
 	
 	private static void createFile(RandomAccessFile file) throws IOException {
+		file.writeLong(-1L);
+		file.writeLong(16L);
+		
 		System.out.printf("Writing %d Blocks to \"%s\"...%n", NUM_OF_FRIENDS, TEST_FILE);
 		Friend f = new Friend();
 		Block b = new Block(f, -1, Block.BYTES + 16);
@@ -98,22 +89,26 @@ public class TestDriver {
 	
 	public static void read(RandomAccessFile file) throws IOException{
 		System.out.printf("Reading \"%s\"...%n%n", TEST_FILE);
-		long loc = file.getFilePointer();
-		long a = file.readLong();
-		System.out.printf("[Offset = %d]: %d%n", loc, a);
-		loc = file.getFilePointer();
-		long b = file.readLong();
-		System.out.printf("[Offset = %d]: %d%n", loc, b);
-		System.out.println("--------------------------------------------------------------------------------------------------");
-		Block block = new Block();
 		
+		long loc = file.getFilePointer();
+		//Print the DP and FP as well as their offsets
+		long dp = file.readLong();
+		System.out.printf("[Offset = %d]: %d%n", loc, dp);
+		loc = file.getFilePointer();
+		long fp = file.readLong();
+		System.out.printf("[Offset = %d]: %d%n", loc, fp);
+		System.out.println("--------------------------------------------------------------------------------------------------");
+		
+		//Init variables for reading
+		Block block = new Block();
 		boolean eof = false;
 		
+		//Read every block in the file
 		while(!eof){
 			try{
 				loc = file.getFilePointer();
 				block.readObject(file);
-				
+				//Print statements (Maybe should make into a method)
 				System.out.printf("OFFSET = %d%n", loc);
 				System.out.printf("%s%n", block.getData());
 				System.out.printf("Prev = %-5d Next = %-5d%n", block.getPrev(), block.getNext());
@@ -127,40 +122,38 @@ public class TestDriver {
 	}
 	
 	public static void addFriend(RandomAccessFile file, Friend friend){
-		
 		try {
+			//Seek to FP
 			file.seek(8);
 			long open = file.readLong();
-			
+			//Seek to next free block
 			file.seek(open);
 			
 			Block b = new Block();
+			//Read the block
 			b.readObject(file);
-			
+			//Set the data of the block
 			b.setData(friend);
-			
+			//Store the free pointer to the next block
+			//TODO: Should change this to a search for the next free block
 			long newOpen = file.getFilePointer();
 			
+			//Write Block
+			file.seek(open);
+			b.writeObject(file);
+			
+			//Update DP and FP
 			file.seek(0);
+			//TODO: DP shouldn't necessarily change on every insert
 			file.writeLong(open);
 			file.writeLong(newOpen);
 			
-			file.seek(open);
 			
-			b.writeObject(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		
-	}
-
-	public static void pause(long milli){
-		try {
-			Thread.sleep(milli);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public static void printFile(RandomAccessFile file) {

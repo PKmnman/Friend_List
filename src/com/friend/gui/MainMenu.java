@@ -8,8 +8,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
-import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -18,22 +16,25 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * The {@code MainMenu} class serves as the JavaFX {@code Controller}
- * for the main gui of the {@code FriendApp} program.
+ * for the main gui of the {@code FriendApp} program. The majority of the
+ * UI is defined in the "MainMenu.fxml" file packaged with the program.
  * <p>
  * {@code MainMenu} uses a {@link javafx.scene.control.TableView TableView} to list
- * and display the {@link com.friend.Friend} objects stored in a binary file
+ * and display the {@link com.friend.Friend} objects stored in a binary file that is
+ * structured appropriately.
  */
 public class MainMenu extends BorderPane {
 
+	//This is the location of the FXML file, always constant
 	private static final URL FXML_FILE = MainMenu.class.getResource("/com/friend/gui/fxml/MainMenu.fxml");
 
 	private AddDialog addDialog;
 
+	//Fields defined in FXML
+	
 	@FXML private TableView<Friend> displayTable;
 	@FXML private TableColumn<Friend, String> firstNameColumn;
 	@FXML private TableColumn<Friend, String> lastNameColumn;
