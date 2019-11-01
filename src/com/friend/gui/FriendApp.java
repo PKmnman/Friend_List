@@ -20,19 +20,21 @@ public class FriendApp extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		MainMenu mainMenu = new MainMenu();
-		mainMenu.init();
 
 		Scene appScene = new Scene(mainMenu);
 
+		primaryStage.setTitle("Friend List");
 		primaryStage.setOnShowing(this::loadFriendList);
 		primaryStage.setScene(appScene);
 		primaryStage.sizeToScene();
-		primaryStage.setMinWidth(640);
-		primaryStage.setMinHeight(448);
-		primaryStage.setResizable(true);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	}
-
+	
+	/**
+	 * Loads the list of Friends from the program's storage file
+	 * @param e the OnShowing event
+	 */
 	private void loadFriendList(WindowEvent e){
 		//TODO: Load the list of friends from a file
 	}
