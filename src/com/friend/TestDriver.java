@@ -23,17 +23,10 @@ public class TestDriver {
 		}
 		
 		RandomAccessFile file = new RandomAccessFile(test, "rw");
-		
-		if(!test.exists()){
-			test.createNewFile();
-			file = new RandomAccessFile(test, "rw");
 			
-			//Create the file and populate it with blocks
-			createFile(file);
-			System.out.println("Blocks written to file!\n");
-		}else{
-			file = new RandomAccessFile(test, "rw");
-		}
+		//Create the file and populate it with blocks
+		createFile(file);
+		System.out.println("Blocks written to file!\n");
 		
 		//Close the file
 		file.close();
@@ -57,7 +50,7 @@ public class TestDriver {
 		file.close();
 		
 		//Re-open the file for reading
-		file = new RandomAccessFile(TEST_FILE.getPath(), "r");
+		file = new RandomAccessFile(test, "r");
 		read(file);
 		
 		System.out.println("\nDone!!!");
