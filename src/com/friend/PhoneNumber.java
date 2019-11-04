@@ -92,12 +92,13 @@ public class PhoneNumber {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof PhoneNumber){
-			for (int i = 0; i < ((PhoneNumber) obj).DIGITS.length; i++){
-				if(this.DIGITS[i] != ((PhoneNumber) obj).DIGITS[i]){
+			PhoneNumber p = ((PhoneNumber) obj);
+			for (int j = 0; j < 5; j++){
+				if(this.DIGITS[j] != p.DIGITS[j]){
 					return false;
 				}
-				return true;
 			}
+			return true;
 		}
 		return false;
 	}
