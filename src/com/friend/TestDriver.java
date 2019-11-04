@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 
 public class TestDriver {
 
@@ -161,6 +162,48 @@ public class TestDriver {
 	
 	public  static void deleteRecord(){
 	
+	}
+	public static void deleteFriend(RandomAccessFile file, String firstName, String lastName){
+		try{
+			file.seek(16);
+			Block b = new Block();
+			Friend f = new Friend();
+			while(true){
+				long loc = file.getFilePointer();
+				b.readObject(file);
+				f = b.getData();
+				if (f.compareNames(firstName,lastName)){
+					long prev = b.getPrev();
+					//Previous block location
+					long next = b.getNext();
+					//Next block location
+					long curr = loc;
+					//Current block location
+					file.seek(prev);
+					//Go back to prev block to change next location
+					b.readObject(file);
+					b.setNext(next);
+					file.seek(prev);
+					b.writeObject(file);
+
+					file.seek(next);
+					//Go to next block to change prev location
+					b.readObject(file);
+					b.setPrev(prev);
+					file.seek(next);
+					b.writeObject(file);
+
+					file.seek(8);
+					//Change FP to current block
+					file.writeLong(curr);
+				}
+
+			}
+		}catch (EOFException e){
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void printFile(RandomAccessFile file) {
