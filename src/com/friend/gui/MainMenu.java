@@ -80,12 +80,6 @@ public class MainMenu extends BorderPane {
 		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		
-		//firstNameColumn.setCellFactory(new CellFactory());
-		//lastNameColumn.setCellFactory(new CellFactory());
-		
-		//This is a test list
-		//ObservableList<Friend> friends = this.loadRecords();
-		
 		ObservableList<Friend> list = FXCollections.observableArrayList();
 		
 		list.add(new Friend("Gary", "Reeves", "2037367606"));
