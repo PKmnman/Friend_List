@@ -196,6 +196,7 @@ public class TestDriver {
 					file.seek(8);
 					//Change FP to current block
 					file.writeLong(curr);
+					break;
 				}
 
 			}
