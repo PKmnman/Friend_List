@@ -12,17 +12,11 @@
     <fx:define>
         <ContextMenu fx:id="tableContextMenu">
             <items>
-                <MenuItem mnemonicParsing="false" text="Add Friend..." />
-                <MenuItem mnemonicParsing="false" text="Delete Friend..."/>
-                <MenuItem mnemonicParsing="false" text="Edit Friend..."/>
+                <MenuItem mnemonicParsing="false" text="Edit..."/>
+                <MenuItem mnemonicParsing="false" text="Delete..."/>
             </items>
         </ContextMenu>
     </fx:define>
-
-    <fx:define>
-
-    </fx:define>
-
 
     <top>
         <HBox>

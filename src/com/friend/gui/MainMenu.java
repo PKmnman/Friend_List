@@ -8,10 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -80,17 +77,27 @@ public class MainMenu extends BorderPane {
 		//TODO: Load the list of friends
 		
 		//Setup the table display
-		firstNameColumn.setCellValueFactory(new PropertyValueFactory("firstName"));
-		lastNameColumn.setCellValueFactory(new PropertyValueFactory("lastName"));
+		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		
-		firstNameColumn.setCellFactory(new CellFactory());
-		lastNameColumn.setCellFactory(new CellFactory());
+		ObservableList<Friend> list = FXCollections.observableArrayList();
 		
-		//This is a test list
-		ObservableList<Friend> friends = FXCollections.observableArrayList();
-		friends.addAll(new Friend("Gary", "Reeves", "2037367606"), new Friend("Ted", "Test", "2036365421"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
 		
-		displayTable.setItems(friends);
+		displayTable.setRowFactory(p -> {
+			TableRow<Friend> row = new TableRow<>();
+			row.setContextMenu(tableContextMenu);
+			return row;
+		});
+		
+		displayTable.setItems(list);
 		
 		//TODO: Load the "Add/Edit Friend" dialog
 		
@@ -98,6 +105,20 @@ public class MainMenu extends BorderPane {
 		//this.addDialog.init();
 	}
 
+	private ObservableList<Friend> loadRecords(){
+		ObservableList<Friend> list = FXCollections.observableArrayList();
+		
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		
+		return list;
+	}
 	
 	private class CellFactory implements Callback<TableColumn<Friend, String>, TableCell<Friend, String>>{
 		

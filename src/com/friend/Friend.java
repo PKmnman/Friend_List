@@ -61,10 +61,10 @@ public class Friend {
 	public void read(RandomAccessFile file) throws IOException{
 		byte[] lastName = new byte[Character.BYTES * 15];
 		byte[] firstName = new byte[Character.BYTES * 15];
-
+		//Read and store the first name
 		file.read(firstName);
 		this.firstName = new String(firstName);
-
+		//Read and store the last name
 		file.read(lastName);
 		this.lastName = new String(lastName);
 
