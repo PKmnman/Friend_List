@@ -84,8 +84,8 @@ public class TestDriver {
 		for (int i = 0; i < NUM_OF_FRIENDS - 1; i++) {
 			b.setPrev(prev);
 			b.setNext(file.getFilePointer() + Block.BYTES);
-			b.writeObject(file);
 			prev = file.getFilePointer();
+			b.writeObject(file);
 		}
 		
 		b.setNext(-1);
