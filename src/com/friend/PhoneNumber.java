@@ -88,5 +88,18 @@ public class PhoneNumber {
 
 		return buff.toString();
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof PhoneNumber){
+			for (int i = 0; i < ((PhoneNumber) obj).DIGITS.length; i++){
+				if(this.DIGITS[i] != ((PhoneNumber) obj).DIGITS[i]){
+					return false;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

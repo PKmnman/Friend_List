@@ -1,6 +1,7 @@
 package com.friend;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
@@ -13,17 +14,32 @@ public class TestDriver {
 	
 	public static void main(String[] args) throws IOException{
 		//Open binary file for read/write operations
-		RandomAccessFile file = new RandomAccessFile(new File(TEST_FILE.getPath()), "rw");;
-		//Create the file and populate it with blocks
-		createFile(file);
-
-		System.out.println("Blocks written to file!\n");
+		File test = null;
+		try {
+			test = new File(TEST_FILE.toURI());
+		} catch (URISyntaxException e) {
+			System.err.println("Failed to load file");
+			System.exit(-1);
+		}
+		
+		RandomAccessFile file = new RandomAccessFile(test, "rw");
+		
+		if(!test.exists()){
+			test.createNewFile();
+			file = new RandomAccessFile(test, "rw");
+			
+			//Create the file and populate it with blocks
+			createFile(file);
+			System.out.println("Blocks written to file!\n");
+		}else{
+			file = new RandomAccessFile(test, "rw");
+		}
 		
 		//Close the file
 		file.close();
 
 		//Re-open File
-		file = new RandomAccessFile(TEST_FILE.getPath(), "rw");
+		file = new RandomAccessFile(test, "rw");
 		
 		//Read and print to std::out
 		read(file);
@@ -140,17 +156,18 @@ public class TestDriver {
 			b.writeObject(file);
 			
 			//Update DP and FP
-			file.seek(0);
+			file.seek(8);
 			//TODO: DP shouldn't necessarily change on every insert
-			file.writeLong(open);
 			file.writeLong(newOpen);
 			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+	}
+	
+	public  static void deleteRecord(){
+	
 	}
 
 	public static void printFile(RandomAccessFile file) {

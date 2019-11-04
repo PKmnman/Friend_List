@@ -91,6 +91,7 @@ public class MainMenu extends BorderPane {
 		list.add(new Friend("Gary", "Reeves", "2037367606"));
 		list.add(new Friend("Gary", "Reeves", "2037367606"));
 		
+		//This adds the context menu to each row
 		displayTable.setRowFactory(p -> {
 			TableRow<Friend> row = new TableRow<>();
 			row.setContextMenu(tableContextMenu);

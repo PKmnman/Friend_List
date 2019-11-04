@@ -130,4 +130,11 @@ public class Friend {
 		return String.format("Name: %-16s%-16s%s", firstName, lastName, phoneNumber);
 	}
 
+	public boolean equals(Object o){
+		if(o instanceof Friend){
+			Friend f = (Friend)o;
+			return (f.getFirstName().equalsIgnoreCase(this.firstName) && f.getLastName().equalsIgnoreCase(this.lastName) && f.getPhoneNumber().equals(this.phoneNumber));
+		}
+		return false;
+	}
 }
