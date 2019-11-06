@@ -170,6 +170,7 @@ public class TestDriver {
 			Friend f = new Friend();
 			boolean found = false;
 			while(found = false){
+			    ///If never found then while loop goes forever
 				long loc = file.getFilePointer();
 				b.readObject(file);
 				f = b.getData();
