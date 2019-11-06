@@ -168,7 +168,8 @@ public class TestDriver {
 			file.seek(16);
 			Block b = new Block();
 			Friend f = new Friend();
-			while(true){
+			boolean found = false;
+			while(found = false){
 				long loc = file.getFilePointer();
 				b.readObject(file);
 				f = b.getData();
@@ -179,6 +180,8 @@ public class TestDriver {
 					//Next block location
 					long curr = loc;
 					//Current block location
+
+
 					file.seek(prev);
 					//Go back to prev block to change next location
 					b.readObject(file);
@@ -196,7 +199,8 @@ public class TestDriver {
 					file.seek(8);
 					//Change FP to current block
 					file.writeLong(curr);
-					break;
+
+					found = true;
 				}
 
 			}
