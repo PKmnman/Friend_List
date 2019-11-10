@@ -121,7 +121,7 @@ public class Friend {
 	}
 
 	public String toString(){
-		return String.format("Name: %-16s%-16s%s", firstName, lastName, phoneNumber);
+		return String.format("Name: %s %s %s", firstName, lastName, phoneNumber);
 	}
 
 	public boolean equals(Object o){
