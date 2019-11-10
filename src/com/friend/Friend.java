@@ -60,13 +60,13 @@ public class Friend {
 		for(int i = 0; i < firstName.length; i++){
 			firstName[i] = file.readChar();
 		}
-		this.firstName = new String(firstName);
+		this.firstName = new String(firstName).trim();
 		
 		//Read and store the last name
 		for(int i = 0; i < lastName.length; i++){
 			lastName[i] = file.readChar();
 		}
-		this.lastName = new String(lastName);
+		this.lastName = new String(lastName).trim();
 
 		this.phoneNumber = PhoneNumber.read(file);
 	}
