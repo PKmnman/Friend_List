@@ -53,13 +53,19 @@ public class Friend {
 	}
 
 	public void read(RandomAccessFile file) throws IOException{
-		byte[] lastName = new byte[Character.BYTES * 15];
-		byte[] firstName = new byte[Character.BYTES * 15];
+		char[] lastName = new char[15];
+		char[] firstName = new char[15];
+		
 		//Read and store the first name
-		file.read(firstName);
+		for(int i = 0; i < firstName.length; i++){
+			firstName[i] = file.readChar();
+		}
 		this.firstName = new String(firstName);
+		
 		//Read and store the last name
-		file.read(lastName);
+		for(int i = 0; i < lastName.length; i++){
+			lastName[i] = file.readChar();
+		}
 		this.lastName = new String(lastName);
 
 		this.phoneNumber = PhoneNumber.read(file);
