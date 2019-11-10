@@ -139,6 +139,6 @@ public class Friend {
 	}
 
 	public boolean compareNames(String nameFirst, String nameLast){
-		return (this.firstName.equalsIgnoreCase(nameFirst) && this.lastName.equalsIgnoreCase(nameLast));
+		return (this.firstName.trim().equalsIgnoreCase(nameFirst) && this.lastName.trim().equalsIgnoreCase(nameLast));
 	}
 }

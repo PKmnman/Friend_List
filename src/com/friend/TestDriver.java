@@ -45,7 +45,8 @@ public class TestDriver {
 		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
 		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
 		addFriend(file, new Friend("Ricky", "He", "2153596726"));
-		
+
+		deleteFriend(file,"Jayne","Doe");
 		//Close the file
 		file.close();
 		
@@ -164,6 +165,12 @@ public class TestDriver {
 			file.seek(16);
 			Block b = new Block();
 			Friend f = new Friend();
+			/*StringBuffer buff = new StringBuffer(firstName);
+			buff.setLength(15);
+			firstName = buff.toString();
+			buff = new StringBuffer(lastName);
+			buff.setLength(15);
+			lastName = buff.toString();*/
 			while(true){
 			    ///If never found then while loop goes forever
 				long loc = file.getFilePointer();
