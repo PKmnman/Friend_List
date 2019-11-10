@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
 
 public class TestDriver {
 
@@ -160,9 +159,6 @@ public class TestDriver {
 		}
 	}
 	
-	public  static void deleteRecord(){
-	
-	}
 	public static void deleteFriend(RandomAccessFile file, String firstName, String lastName){
 		try{
 			file.seek(16);
@@ -205,9 +201,7 @@ public class TestDriver {
 				}
 
 			}
-		}catch (EOFException e){
-			e.printStackTrace();
-		} catch (IOException e) {
+		}catch (IOException e){
 			e.printStackTrace();
 		}
 	}

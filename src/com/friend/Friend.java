@@ -16,15 +16,9 @@ public class Friend {
 	private PhoneNumber phoneNumber;
 
 	public Friend(String firstName, String lastName, PhoneNumber phoneNumber){
-		StringBuffer buff = new StringBuffer(firstName);
-		buff.setLength(15);
+		this.firstName = firstName.trim();
 
-		this.firstName = buff.toString();
-
-		buff = new StringBuffer(lastName);
-		buff.setLength(15);
-
-		this.lastName = buff.toString();
+		this.lastName = lastName.trim();
 
 		this.phoneNumber = phoneNumber;
 	}
@@ -139,6 +133,6 @@ public class Friend {
 	}
 
 	public boolean compareNames(String nameFirst, String nameLast){
-		return (this.firstName.equalsIgnoreCase( nameFirst) && this.lastName.equalsIgnoreCase(nameLast));
+		return (this.firstName.equalsIgnoreCase(nameFirst) && this.lastName.equalsIgnoreCase(nameLast));
 	}
 }
