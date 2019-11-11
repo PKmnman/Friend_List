@@ -187,23 +187,23 @@ public class TestDriver {
 
 					file.seek(prev);
 					//Go back to prev block to change next location
-					Block bPrev = new Block();
-					bPrev.readObject(file);
-					bPrev.setNext(next);
+					b.readObject(file);
+					b.setNext(next);
 					file.seek(prev);
-					bPrev.writeObject(file);
+					b.writeObject(file);
 
 					file.seek(next);
 					//Go to next block to change prev location
-					Block bNext = new Block();
-					bNext.readObject(file);
-					bNext.setPrev(prev);
+					b.readObject(file);
+					b.setPrev(prev);
 					file.seek(next);
-					bNext.writeObject(file);
+					b.writeObject(file);
 
 					file.seek(8);
 					//Change FP to current block
 					file.writeLong(curr);
+
+					file.seek(next);
 
 				}
 
