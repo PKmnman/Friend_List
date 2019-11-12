@@ -165,12 +165,7 @@ public class TestDriver {
 			file.seek(16);
 			Block b = new Block();
 			Friend f = new Friend();
-			/*StringBuffer buff = new StringBuffer(firstName);
-			buff.setLength(15);
-			firstName = buff.toString();
-			buff = new StringBuffer(lastName);
-			buff.setLength(15);
-			lastName = buff.toString();*/
+
 			while(true){
 			    ///If never found then while loop goes forever
 				long loc = file.getFilePointer();
@@ -191,6 +186,9 @@ public class TestDriver {
 					b.setNext(next);
 					file.seek(prev);
 					b.writeObject(file);
+
+					file.seek(prev);
+					b.readObject(file);
 
 					file.seek(next);
 					//Go to next block to change prev location
