@@ -79,19 +79,19 @@ public class TestDriver {
 		
 		long prev = file.getFilePointer();
 		
-		b.writeObject(file);
+		b.write(file);
 		
 		//Write The blocks to the file
 		for (int i = 0; i < NUM_OF_FRIENDS - 1; i++) {
 			b.setPrev(prev);
 			b.setNext(file.getFilePointer() + Block.BYTES);
 			prev = file.getFilePointer();
-			b.writeObject(file);
+			b.write(file);
 		}
 		
 		b.setNext(-1);
 		b.setPrev(prev);
-		b.writeObject(file);
+		b.write(file);
 	}
 	
 	public static void read(RandomAccessFile file) throws IOException{
@@ -114,7 +114,7 @@ public class TestDriver {
 		while(!eof){
 			try{
 				loc = file.getFilePointer();
-				block.readObject(file);
+				block.read(file);
 				//Print statements (Maybe should make into a method)
 				System.out.printf("OFFSET = %d%n", loc);
 				System.out.printf("%s%n", block.getData());
@@ -138,7 +138,7 @@ public class TestDriver {
 			
 			Block b = new Block();
 			//Read the block
-			b.readObject(file);
+			b.read(file);
 			//Set the data of the block
 			b.setData(friend);
 			//Store the free pointer to the next block
@@ -147,7 +147,7 @@ public class TestDriver {
 			
 			//Write Block
 			file.seek(open);
-			b.writeObject(file);
+			b.write(file);
 			
 			//Update DP and FP
 			file.seek(8);
@@ -156,7 +156,7 @@ public class TestDriver {
 			
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+		
 		}
 	}
 	
@@ -168,7 +168,7 @@ public class TestDriver {
 			while(true){
 			    ///If never found then while loop goes forever
 				long loc = file.getFilePointer();
-				b.readObject(file);
+				b.read(file);
 				f = b.getData();
 				if (f.compareNames(firstName,lastName)){
 					long prev = b.getPrev();
@@ -179,19 +179,21 @@ public class TestDriver {
 					//Current block location
 
 
-					file.seek(prev);
+					file.seek(b.getPrev());
 					//Go back to prev block to change next location
-					b.readObject(file);
-					b.setNext(next);
-					file.seek(prev);
-					b.writeObject(file);
+					Block bp = new Block(new Friend(),16L, 178L);
+					bp.read(file);
+					bp.setNext(178);
+					//write the block to the file
+					file.seek(b.getPrev());
+					bp.write(file);
 
-					file.seek(next);
+					file.seek(b.getNext());
 					//Go to next block to change prev location
-					b.readObject(file);
-					b.setPrev(prev);
+					bp.read(file);
+					bp.setPrev(prev);
 					file.seek(next);
-					b.writeObject(file);
+					bp.write(file);
 
 					file.seek(8);
 					//Change FP to current block
@@ -217,7 +219,7 @@ public class TestDriver {
 			while (true) {
 				long loc = file.getFilePointer();
 				Block b = new Block();
-				b.readObject(file);
+				b.read(file);
 				System.out.printf("OFFSET %d %n", loc);
 				System.out.printf("%s %n", b.getData());
 				System.out.printf("PREV = %d \t NEXT = %d %n", b.getPrev(), b.getNext());

@@ -2,7 +2,6 @@ package com.friend;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 
 public class Block {
 
@@ -34,53 +33,13 @@ public class Block {
 		this(new Friend());
 	}
 
-    public void writeObject(RandomAccessFile file) throws IOException {
-    	/*long mask = 0x0000000F;
-
-    	byte[] prevPointer = new byte[8];
-    	byte[] nextPointer = new byte[8];
-
-    	//Write the pointers to the next block
-	    for (int i = 56; i > 0; i -= 8) {
-		    prevPointer[(56 - i)/8] = ((byte) ((prev >> i) & mask));
-	    }
-
-	    for (int i = 56; i > 0; i -= 8) {
-		    nextPointer[(56 - i)/8] = ((byte) ((next >> i) & mask));
-	    }
-
-	    file.write(prevPointer);
-	    file.write(nextPointer);*/
-		if(friendObject != null){
-			friendObject.write(file);
-		}else{
-			new Friend().write(file);
-		}
-		
-    	file.writeLong(this.prev);
-    	file.writeLong(this.next);
-
-	    //Writes a default friend in the event this block doesn't have a friend object
-    	
+    public void write(RandomAccessFile file) throws IOException {
+		friendObject.write(file);
+    	file.writeLong(prev);
+    	file.writeLong(next);
     }
 
-    public static Block[] readFile(RandomAccessFile file) throws IOException{
-    	//Create an ArrayList to store the blocks being read
-	    ArrayList<Block> blocks = new ArrayList<>();
-
-	    //Read each block until EOF is reached
-	    do{
-	    	Block b = new Block();
-	    	b.readObject(file);
-	    	blocks.add(b);
-	    }while (file.getFilePointer() < file.length());
-
-	    blocks.trimToSize();
-
-    	return blocks.toArray(new Block[0]);
-    }
-
-    public void readObject(RandomAccessFile file) throws IOException{
+    public void read(RandomAccessFile file) throws IOException{
 		this.friendObject.read(file);
     	this.prev = file.readLong();
 	    this.next = file.readLong();
@@ -111,7 +70,7 @@ public class Block {
     }
 
     public String toString(){
-    	return String.format("[Block p=%#018x n=%#018x]", prev, next);
+    	return String.format("[Block p=%d n=%d]", prev, next);
     }
 
 }

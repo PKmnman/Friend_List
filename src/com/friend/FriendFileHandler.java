@@ -27,7 +27,7 @@ public class FriendFileHandler implements Closeable {
 		
 		if(dataPointer != -1){
 			seekToData();
-			curr.readObject(raf);
+			curr.read(raf);
 		}
 	}
 	
@@ -41,7 +41,7 @@ public class FriendFileHandler implements Closeable {
 			try {
 				loc = raf.getFilePointer();
 				raf.seek(curr.getPrev());
-				prev.readObject(raf);
+				prev.read(raf);
 				raf.seek(loc);
 			}catch (IOException e){
 				System.err.println("Error reading Block");
@@ -58,7 +58,7 @@ public class FriendFileHandler implements Closeable {
 			try {
 				loc = curr.getNext();
 				raf.seek(loc);
-				next.readObject(raf);
+				next.read(raf);
 				
 				if(next.getData().equals(new Friend())){
 				
@@ -81,7 +81,7 @@ public class FriendFileHandler implements Closeable {
 			while(true){
 				///If never found then while loop goes forever
 				loc = raf.getFilePointer();
-				curr.readObject(raf);
+				curr.read(raf);
 				f = b.getData();
 				if (f.compareNames(first,last)){
 					long prev = b.getPrev();
@@ -92,18 +92,18 @@ public class FriendFileHandler implements Closeable {
 					raf.seek(prev);
 					//Go back to prev block to change next location
 					Block bPrev = new Block();
-					bPrev.readObject(raf);
+					bPrev.read(raf);
 					bPrev.setNext(next);
 					raf.seek(prev);
-					bPrev.writeObject(raf);
+					bPrev.write(raf);
 					
 					raf.seek(next);
 					//Go to next block to change prev location
 					Block bNext = new Block();
-					bNext.readObject(raf);
+					bNext.read(raf);
 					bNext.setPrev(prev);
 					raf.seek(next);
-					bNext.writeObject(raf);
+					bNext.write(raf);
 					
 					raf.seek(8);
 					//Change FP to current block
@@ -124,7 +124,7 @@ public class FriendFileHandler implements Closeable {
 			seekToFree();
 			
 			//Read the block
-			curr.readObject(raf);
+			curr.read(raf);
 			//Set the friend data of the block
 			curr.setData(f);
 			//Store the free pointer to the next block
@@ -133,7 +133,7 @@ public class FriendFileHandler implements Closeable {
 			
 			//Write Block
 			seekToFree();
-			curr.writeObject(raf);
+			curr.write(raf);
 			
 			if (dataPointer == -1) {
 				dataPointer = freePointer;

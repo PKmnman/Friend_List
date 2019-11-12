@@ -2,7 +2,6 @@ package com.friend;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
 
 public class Friend {
 
@@ -17,9 +16,7 @@ public class Friend {
 
 	public Friend(String firstName, String lastName, PhoneNumber phoneNumber){
 		this.firstName = firstName.trim();
-
 		this.lastName = lastName.trim();
-
 		this.phoneNumber = phoneNumber;
 	}
 
@@ -37,64 +34,57 @@ public class Friend {
 	 * @return the friend object contained in the {@code RandomAccessFile}
 	 * @throws IOException
 	 */
-	public static Friend readObject(RandomAccessFile file) throws IOException {
-		byte[] lastName = new byte[Character.BYTES * 15];
-		byte[] firstName = new byte[Character.BYTES * 15];
-
-		file.read(firstName);
-		String first = new String(firstName, 0, firstName.length, StandardCharsets.US_ASCII);
-
-		file.read(lastName);
-		String last = new String(lastName, 0, lastName.length, StandardCharsets.US_ASCII);
-
-		PhoneNumber phone = PhoneNumber.read(file);
-
-		return new Friend(first, last, phone);
-	}
-
 	public void read(RandomAccessFile file) throws IOException{
-		char[] lastName = new char[15];
-		char[] firstName = new char[15];
+		char[] lastName = new char[MAX_NAME_LENGTH];
+		char[] firstName = new char[MAX_NAME_LENGTH];
 		
 		//Read and store the first name
-		for(int i = 0; i < firstName.length; i++){
+		for(int i = 0; i < MAX_NAME_LENGTH; i++){
 			firstName[i] = file.readChar();
 		}
-		this.firstName = new String(firstName).trim();
+		this.firstName = new String(firstName, 0, MAX_NAME_LENGTH).trim();
 		
 		//Read and store the last name
-		for(int i = 0; i < lastName.length; i++){
+		for(int i = 0; i < MAX_NAME_LENGTH; i++){
 			lastName[i] = file.readChar();
 		}
-		this.lastName = new String(lastName).trim();
+		this.lastName = new String(lastName, 0, MAX_NAME_LENGTH).trim();
 
 		this.phoneNumber = PhoneNumber.read(file);
 	}
 
 	public void write(RandomAccessFile file) throws IOException{
-		//TODO: Implement write functionality
-
-		StringBuffer buf;
+		//Write first name
 		if (firstName != null){
-			buf = new StringBuffer(this.firstName);
+			for (int i = 0; i < MAX_NAME_LENGTH; i++) {
+				if(i < firstName.length()){
+					file.writeChar(firstName.charAt(i));
+				}else{
+					file.writeChar(' ');
+				}
+			}
+		}else {
+			for (int i = 0; i < MAX_NAME_LENGTH; i++) {
+				file.writeChar(' ');
+			}
 		}
-		else {
-			buf = new StringBuffer(MAX_NAME_LENGTH);
+		
+		//Write last name
+		if(lastName != null){
+			for (int i = 0; i < MAX_NAME_LENGTH; i++) {
+				if(i < lastName.length()){
+					file.writeChar(lastName.charAt(i));
+				}else{
+					file.writeChar(' ');
+				}
+			}
+		}else {
+			for (int i = 0; i < MAX_NAME_LENGTH; i++) {
+				file.writeChar(' ');
+			}
 		}
-
-		buf.setLength(MAX_NAME_LENGTH);
-		file.writeChars(buf.toString());
-
-		if (lastName != null){
-			buf = new StringBuffer(this.lastName);
-		}
-		else {
-			buf = new StringBuffer(MAX_NAME_LENGTH);
-		}
-
-		buf.setLength(MAX_NAME_LENGTH);
-		file.writeChars(buf.toString());
-
+		
+		//Write phone number
 		phoneNumber.write(file);
 	}
 
