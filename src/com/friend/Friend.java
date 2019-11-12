@@ -50,7 +50,7 @@ public class Friend {
 		}
 		this.lastName = new String(lastName, 0, MAX_NAME_LENGTH).trim();
 
-		this.phoneNumber = PhoneNumber.read(file);
+		this.phoneNumber.read(file);
 	}
 
 	public void write(RandomAccessFile file) throws IOException{
@@ -60,12 +60,8 @@ public class Friend {
 				if(i < firstName.length()){
 					file.writeChar(firstName.charAt(i));
 				}else{
-					file.writeChar(' ');
+					file.writeChar('\u0000');
 				}
-			}
-		}else {
-			for (int i = 0; i < MAX_NAME_LENGTH; i++) {
-				file.writeChar(' ');
 			}
 		}
 		
@@ -75,12 +71,8 @@ public class Friend {
 				if(i < lastName.length()){
 					file.writeChar(lastName.charAt(i));
 				}else{
-					file.writeChar(' ');
+					file.writeChar('\u0000');
 				}
-			}
-		}else {
-			for (int i = 0; i < MAX_NAME_LENGTH; i++) {
-				file.writeChar(' ');
 			}
 		}
 		

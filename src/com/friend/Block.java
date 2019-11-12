@@ -18,11 +18,11 @@ public class Block {
     }
 
     public Block(Friend friend, long prev){
-    	this(friend, prev, prev + (BYTES * 2));
+    	this(friend, 0, 0);
     }
 
     public Block(Friend friend){
-    	this(friend, -1L);
+    	this(friend, 0L, 0L);
     }
 
     public Block(String firstName, String lastName, String phoneNumber){

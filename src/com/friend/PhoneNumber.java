@@ -17,14 +17,13 @@ public class PhoneNumber {
 
 	private static final int BIT_MASK = 0x000F;
 	private static final short DIGIT_SIZE = 4;
-	private static final short ARRAY_SIZE = 5;
 
 	private static final int MAX_LENGTH = 10;
 
 	private final byte[] DIGITS;
 
 	public PhoneNumber(String phoneNumber){
-		DIGITS = new byte[ARRAY_SIZE];
+		DIGITS = new byte[BYTES];
 		encode(phoneNumber);
 	}
 
@@ -33,7 +32,7 @@ public class PhoneNumber {
 	}
 
 	public PhoneNumber(){
-		DIGITS = new byte[ARRAY_SIZE];
+		DIGITS = new byte[BYTES];
 	}
 
 	/**
@@ -68,13 +67,14 @@ public class PhoneNumber {
 	}
 
 	public void write(RandomAccessFile file) throws IOException {
-		file.write(DIGITS);
+		file.write(DIGITS, 0, BYTES);
 	}
 
-	public static PhoneNumber read(RandomAccessFile file) throws IOException{
-		byte[] digits = new byte[BYTES];
-		file.read(digits);
-		return new PhoneNumber(digits);
+	public PhoneNumber read(RandomAccessFile file) throws IOException{
+		for (int i = 0; i < BYTES; i++){
+			DIGITS[i] = file.readByte();
+		}
+		return this;
 	}
 
 	public String toString(){
