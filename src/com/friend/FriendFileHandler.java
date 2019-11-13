@@ -143,8 +143,20 @@ public class FriendFileHandler implements Closeable {
 			System.err.println("Error adding friend");
 		}
 	}
-	
+	//Searches for the next Free block offset
 	private long searchNextFree(){
+		try{
+			raf.seek(16);
+			while (true){
+				loc = raf.getFilePointer();
+				curr.read(raf);
+				if (curr.isDeleted()){
+					return loc;
+				}
+			}
+		}catch (IOException e) {
+
+		}
 		return 0;
 	}
 	
