@@ -181,12 +181,15 @@ public class TestDriver {
 
 					file.seek(b.getPrev());
 					//Go back to prev block to change next location
-					Block bp = new Block(new Friend(),16L, 178L);
+					Block bp = new Block();
 					bp.read(file);
-					bp.setNext(178);
+					bp.setNext(next);
 					//write the block to the file
 					file.seek(b.getPrev());
 					bp.write(file);
+
+					//Change the curr block to null
+
 
 					file.seek(b.getNext());
 					//Go to next block to change prev location
