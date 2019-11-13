@@ -10,13 +10,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -109,7 +112,17 @@ public class MainMenu extends BorderPane {
 		System.out.println("Delete me!!!");
 		System.out.println(e.getSource());
 	}
-	
+
+
+	public void onAddAction(ActionEvent event){
+		AddDialog dialog = new AddDialog();
+		Scene scene = new Scene(dialog);
+		Stage stage = new Stage(StageStyle.UTILITY);
+		stage.initOwner(this.getScene().getWindow());
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		stage.showAndWait();
+	}
 	ObservableList<Friend> loadRecords(){
 		friends = FXCollections.observableArrayList();
 		

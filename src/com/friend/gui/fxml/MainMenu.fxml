@@ -52,7 +52,7 @@
    <bottom>
       <HBox alignment="CENTER_RIGHT" minHeight="58.0" minWidth="300.0" spacing="12.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Add Friend..." />
+            <Button onAction="#onAddAction" text="Add Friend..." />
 
              <Button mnemonicParsing="false" text="Edit Friend..." />
             <Button onAction="#onDeleteAction" mnemonicParsing="false" text="Delete..." />
