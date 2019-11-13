@@ -13,7 +13,7 @@ public class FriendFileHandler implements Closeable {
 	
 	private long freePointer;
 	private long dataPointer;
-	private long next = -1;
+	private long next = -2;
 	
 	private RandomAccessFile raf;
 	private Block curr;
@@ -63,7 +63,7 @@ public class FriendFileHandler implements Closeable {
 		try {
 			if(dataPointer == -1){
 				return null;
-			}else if (next == -1){
+			}else if (next == -2){
 				raf.seek(dataPointer);
 			}else if(raf.getFilePointer() != next){
 				raf.seek(next);
@@ -273,7 +273,7 @@ public class FriendFileHandler implements Closeable {
 		return dataPointer;
 	}
 	
-	public void forcePointerUpdate() throws IOException{
+	private void forcePointerUpdate() throws IOException{
 		raf.seek(DP_OFFSET);
 		raf.writeLong(dataPointer);
 		raf.writeLong(freePointer);
@@ -283,6 +283,15 @@ public class FriendFileHandler implements Closeable {
 	public void close() throws IOException {
 		forcePointerUpdate();
 		raf.close();
+	}
+	
+	public long getFilePointer() {
+		try{
+			return raf.getFilePointer();
+		}catch (IOException e){
+			return -1;
+		}
+		
 	}
 	
 }

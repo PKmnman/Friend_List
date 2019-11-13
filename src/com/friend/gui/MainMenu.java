@@ -99,9 +99,6 @@ public class MainMenu extends BorderPane {
 		displayTable.setItems(loadRecords());
 		displayTable.refresh();
 		//TODO: Load the "Add/Edit Friend" dialog
-		
-		//this.addDialog = new AddDialog(loader);
-		//this.addDialog.init();
 	}
 	
 	/**
@@ -119,12 +116,20 @@ public class MainMenu extends BorderPane {
 
 	public void onAddAction(ActionEvent event){
 		AddDialog dialog = new AddDialog();
+		dialog.autosize();
 		Scene scene = new Scene(dialog);
 		Stage stage = new Stage(StageStyle.UTILITY);
+		
+		stage.sizeToScene();
+		stage.setResizable(false);
+		
 		stage.initOwner(this.getScene().getWindow());
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		stage.showAndWait();
+		
+		
+		
 	}
 	
 	ObservableList<Friend> loadRecords(){

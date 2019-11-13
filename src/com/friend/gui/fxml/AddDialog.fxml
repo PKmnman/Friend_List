@@ -1,41 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<fx:root type="VBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="480" maxWidth="640" minHeight="-Infinity" minWidth="-Infinity" type="VBox" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-      </GridPane>
-
-      <GridPane>
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
 
-        <children>
-             <FlowPane alignment="CENTER_LEFT" columnHalignment="CENTER" hgap="4.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="200.0" scaleShape="false" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
-                 <Label text="("/>
-                 <TextField fx:id="areaCodeField" alignment="CENTER" maxWidth="-Infinity" prefWidth="50.0" promptText="000"/>
-                 <Label text=") -"/>
-                 <TextField fx:id="phoneField1" alignment="CENTER" maxWidth="-Infinity" prefWidth="50.0" promptText="000"/>
-                 <Label text="-"/>
-                 <TextField fx:id="phoneField2" alignment="CENTER" maxWidth="-Infinity" prefWidth="75.0" promptText="0000" scaleShape="false"/>
-             </FlowPane>
-        </children>
+          <children>
+              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                  <children>
+                      <Label minWidth="110.0" text="First Name:">
+                          <padding>
+                              <Insets bottom="16.0" left="16.0" right="6.0" top="16.0" />
+                          </padding>
+                      </Label>
+                      <TextField fx:id="firstNameField" editable="true" minWidth="125.0" prefColumnCount="15" prefWidth="125.0" promptText="John" />
+                  </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+              </HBox>
+              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                  <children>
+                      <Label minWidth="75.0" text="Last Name:">
+                     <padding>
+                        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                     </padding></Label>
+                      <TextField fx:id="lastNameField" editable="true" minWidth="125.0" prefColumnCount="15" prefWidth="125.0" promptText="Doe">
+                     <HBox.margin>
+                        <Insets right="16.0" />
+                     </HBox.margin></TextField>
+                  </children>
+               <GridPane.margin>
+                  <Insets left="6.0" right="6.0" />
+               </GridPane.margin>
+              </HBox>
+              <HBox alignment="CENTER_LEFT" GridPane.columnIndex="0" GridPane.columnSpan="2147483647" GridPane.rowIndex="1">
+                  <children>
+                      <Label minWidth="110.0" text="Phone Number:">
+                     <padding>
+                        <Insets bottom="16.0" left="16.0" top="16.0" />
+                     </padding>
+                      </Label>
+                      <TextField fx:id="phoneNumberField" alignment="CENTER" minWidth="125.0" prefColumnCount="10" prefWidth="125.0" promptText="(000)-000-0000">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></TextField>
+                  </children>
+              </HBox>
+          </children>
       </GridPane>
    </children>
 </fx:root>
