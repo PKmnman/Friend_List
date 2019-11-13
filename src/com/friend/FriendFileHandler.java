@@ -7,9 +7,9 @@ import java.io.RandomAccessFile;
 
 public class FriendFileHandler implements Closeable {
 	
+	private static final int NUM_OF_FRIENDS = 20;
 	private final long FP_OFFSET = 8;
 	private final long DP_OFFSET = 0;
-	private final long DATA_START = 16;
 	
 	private long freePointer;
 	private long dataPointer;
@@ -20,10 +20,16 @@ public class FriendFileHandler implements Closeable {
 	
 	public FriendFileHandler(String path) throws IOException {
 		raf = new RandomAccessFile(path, "rw");
+		
+		if(raf.length() == 0){
+			populateFile();
+			raf.seek(0);
+		}
+		
 		curr = new Block(null);
 		dataPointer = raf.readLong();
 		freePointer = raf.readLong();
-		loc = DATA_START;
+		loc = dataPointer;
 		
 		if(dataPointer != -1){
 			seekToData();
@@ -31,35 +37,45 @@ public class FriendFileHandler implements Closeable {
 		}
 	}
 	
+	private void populateFile() throws IOException{
+		raf.writeLong(-1L);
+		raf.writeLong(16L);
+		
+		Friend f = new Friend();
+		Block b = new Block(f, -1, Block.BYTES + 16);
+		
+		long prev = raf.getFilePointer();
+		
+		b.write(raf);
+		
+		//Write The blocks to the file
+		for (int i = 0; i < NUM_OF_FRIENDS - 1; i++) {
+			b.setPrev(prev);
+			b.setNext(raf.getFilePointer() + Block.BYTES);
+			prev = raf.getFilePointer();
+			b.write(raf);
+		}
+		
+		b.setNext(-1);
+		b.setPrev(prev);
+		b.write(raf);
+	}
+	
 	public Block readCurr(){
 		return curr;
 	}
 	
-	private Block readPrev(){
-		if(curr != null && curr.getPrev() >= 16){
-			Block prev = new Block();
-			try {
-				loc = raf.getFilePointer();
-				raf.seek(curr.getPrev());
-				prev.read(raf);
-				raf.seek(loc);
-			}catch (IOException e){
-				System.err.println("Error reading Block");
-				System.exit(-1);
-			}
-			return prev;
-		}
-		return null;
-	}
-	
 	public Block readNext(){
 		if(curr != null && curr.getNext() >= (16 + Block.BYTES)){
+			Block next = curr;
 			while(curr.isDeleted()) {
 				try {
-					loc = curr.getNext();
+					loc = next.getNext();
 					raf.seek(loc);
-					curr.read(raf);
-				} catch (IOException e) {
+					next.read(raf);
+				} catch (EOFException e) {
+					return null;
+				} catch (IOException e){
 					System.err.println("Error reading Block");
 					System.exit(-1);
 				}
@@ -76,68 +92,54 @@ public class FriendFileHandler implements Closeable {
 			Friend f;
 			while(true){
 				///If never found then while loop goes forever
-				loc = raf.getFilePointer();
-				curr.read(raf);
+				long loc = raf.getFilePointer();
+				b.read(raf);
 				f = b.getData();
 				if (f.compareNames(first,last)){
 					long prev = b.getPrev();
 					//Previous block location
 					long next = b.getNext();
-					
+					//Next block location
+					long curr = loc;
 					//Current block location
-					raf.seek(prev);
-					//Go back to prev block to change next location
-					Block bPrev = new Block();
-					bPrev.read(raf);
-					bPrev.setNext(next);
-					raf.seek(prev);
-					bPrev.write(raf);
 					
-					raf.seek(next);
+					raf.seek(b.getPrev());
+					//Go back to prev block to change next location
+					Block bp = new Block();
+					bp.read(raf);
+					bp.setNext(next);
+					//write the block to the file
+					raf.seek(b.getPrev());
+					bp.write(raf);
+					
+					//Change the curr block to null
+					raf.seek(curr);
+					bp.read(raf);
+					bp.setData(new Friend());
+					bp.write(raf);
+					
+					
+					raf.seek(b.getNext());
 					//Go to next block to change prev location
-					Block bNext = new Block();
-					bNext.read(raf);
-					bNext.setPrev(prev);
+					bp.read(raf);
+					bp.setPrev(prev);
 					raf.seek(next);
-					bNext.write(raf);
+					bp.write(raf);
 					
 					raf.seek(8);
 					//Change FP to current block
-					freePointer = loc;
+					raf.writeLong(curr);
+					
+					break;
 				}
 			}
-		}catch (EOFException e){
-			System.err.println("Block doesn't exist");
 		}catch (IOException e){
-			System.err.println("Error reading file");
+			e.printStackTrace();
 		}
 	}
 	
 	public void addFriend(Friend f){
-		//Seek to FP
-		//Seek to next free block
-		try {
-			seekToFree();
-			
-			//Read the block
-			curr.read(raf);
-			//Set the friend data of the block
-			curr.setData(f);
-			//Store the free pointer to the next block
-			//TODO: Should change this to a search for the next free block
-			
-			
-			//Write Block
-			seekToFree();
-			curr.write(raf);
-			
-			if (dataPointer == -1) {
-				dataPointer = freePointer;
-			}
-			
-		} catch(IOException e){
-			System.err.println("Error adding friend");
-		}
+		//TODO: COpy over add method
 	}
 	
 	private long searchNextFree(){
@@ -164,11 +166,15 @@ public class FriendFileHandler implements Closeable {
 		loc = raf.getFilePointer();
 	}
 	
-	@Override
-	public void close() throws IOException {
+	public void forcePointerUpdate() throws IOException{
 		raf.seek(DP_OFFSET);
 		raf.writeLong(dataPointer);
 		raf.writeLong(freePointer);
+	}
+	
+	@Override
+	public void close() throws IOException {
+		forcePointerUpdate();
 		raf.close();
 	}
 	

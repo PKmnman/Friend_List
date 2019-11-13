@@ -49,7 +49,9 @@ public class FriendApp extends Application {
 	 * @param e the OnShowing event
 	 */
 	private void loadFriendList(WindowEvent e){
-		//TODO: Load the list of friends from a file
+		if(e.getEventType().equals(WindowEvent.WINDOW_SHOWING)){
+			mainMenu.loadRecords();
+		}
 	}
 	
 	private static void initFriendData() {

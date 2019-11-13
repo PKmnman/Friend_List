@@ -42,6 +42,9 @@ public class MainMenu extends BorderPane {
 	@FXML private TableColumn<Friend, PhoneNumber> phoneNumberColumn;
 	
 	@FXML private ContextMenu tableContextMenu;
+	
+	private ObservableList<Friend> friends;
+	
 	/**
 	 * Default constructor for that constructs and loads the main menu UI.
 	 * <p>
@@ -75,22 +78,10 @@ public class MainMenu extends BorderPane {
 			System.exit(-1);
 		}
 		
-		//TODO: Load the list of friends
-		
 		//Setup the table display
 		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
 		
-		ObservableList<Friend> list = FXCollections.observableArrayList();
-		
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
 		
 		//This adds the context menu to each row
 		displayTable.setRowFactory(p -> {
@@ -99,7 +90,7 @@ public class MainMenu extends BorderPane {
 			return row;
 		});
 		
-		displayTable.setItems(list);
+		displayTable.setItems(friends);
 		
 		//TODO: Load the "Add/Edit Friend" dialog
 		
@@ -107,18 +98,19 @@ public class MainMenu extends BorderPane {
 		//this.addDialog.init();
 	}
 
-	private ObservableList<Friend> loadRecords(){
-		ObservableList<Friend> list = FXCollections.observableArrayList();
+	ObservableList<Friend> loadRecords(){
+		friends = FXCollections.observableArrayList();
 		
 		boolean eof = false;
 		Block b = new Block();
 		while (b != null){
 			b = FriendApp.fileHandler.readNext();
-			
-			
+			if(b != null && !b.isDeleted()){
+				friends.add(b.getData());
+			}
 		}
 		
-		return list;
+		return friends;
 	}
 	
 	private class CellFactory implements Callback<TableColumn<Friend, String>, TableCell<Friend, String>>{
