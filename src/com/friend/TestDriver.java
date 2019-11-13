@@ -47,6 +47,9 @@ public class TestDriver {
 		addFriend(file, new Friend("Ricky", "He", "2153596726"));
 
 		deleteFriend(file,"Jayne","Doe");
+
+		addFriend(file,new Friend("Test","Add","1234567890"));
+
 		//Close the file
 		file.close();
 		
@@ -203,7 +206,6 @@ public class TestDriver {
 			Block b = new Block();
 			Friend f;
 			while(true){
-			    ///If never found then while loop goes forever
 				long loc = file.getFilePointer();
 				b.read(file);
 				f = b.getData();
