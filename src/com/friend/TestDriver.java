@@ -147,13 +147,31 @@ public class TestDriver {
 			
 			//Write Block
 			file.seek(open);
+			long loc = file.getFilePointer();
+			long prev = b.getPrev();
+			long next = b.getNext();
 			b.write(file);
 
-			
+			//Edit the prev block to update its next data
+			file.seek(prev);
+			b.read(file);
+			b.setNext(loc);
+			file.seek(prev);
+			b.write(file);
+
+			//Edit the next Block to update its prev data
+			file.seek(next);
+			b.read(file);
+			b.setPrev(loc);
+			b.write(file);
+
+
+			//Locate next free block
+			long fP = searchNextFree(file);
 			//Update DP and FP
 			file.seek(8);
 			//TODO: DP shouldn't necessarily change on every insert
-			file.writeLong(newOpen);
+			file.writeLong(fP);
 			
 			
 		} catch (IOException e) {
@@ -161,7 +179,7 @@ public class TestDriver {
 		}
 	}
 
-	public long searchNextFree(RandomAccessFile file){
+	public static long searchNextFree(RandomAccessFile file){
 		try{
 			file.seek(16);
 			Block b = new Block();
