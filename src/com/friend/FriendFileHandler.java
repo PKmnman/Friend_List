@@ -151,6 +151,7 @@ public class FriendFileHandler implements Closeable {
 				loc = raf.getFilePointer();
 				curr.read(raf);
 				if (curr.isDeleted()){
+					freePointer = loc;
 					return loc;
 				}
 			}
