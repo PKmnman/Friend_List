@@ -34,7 +34,12 @@ public class Block {
 	}
 
     public void write(RandomAccessFile file) throws IOException {
-		friendObject.write(file);
+		if(friendObject == null){
+			//Using a static instance to avoid creating throwaway objects
+			friendObject = Friend.DEFAULT;
+		}
+    	
+    	friendObject.write(file);
     	file.writeLong(prev);
     	file.writeLong(next);
     }

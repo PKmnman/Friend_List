@@ -10,7 +10,9 @@ public class Friend {
 	private static final int MAX_NAME_LENGTH = 15;
 
 	public static final int BYTES = ((Character.BYTES * MAX_NAME_LENGTH) * 2) + PhoneNumber.BYTES;
-
+	public static final Friend DEFAULT = new Friend();
+	
+	
 	private String lastName, firstName;
 	private PhoneNumber phoneNumber;
 
