@@ -189,6 +189,10 @@ public class TestDriver {
 					bp.write(file);
 
 					//Change the curr block to null
+					file.seek(curr);
+					bp.read(file);
+					bp.setData(new Friend());
+					bp.write(file);
 
 
 					file.seek(b.getNext());

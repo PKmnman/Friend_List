@@ -53,6 +53,7 @@ public class Block {
     //Data to see if the block was deleted or not
 
 
+
     public void setPrev(long prevNum){
         this.prev = prevNum;
     }
