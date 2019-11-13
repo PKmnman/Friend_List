@@ -25,7 +25,7 @@ public class TestDriver {
 		RandomAccessFile file = new RandomAccessFile(test, "rw");
 			
 		//Create the file and populate it with blocks
-		createFile(file);
+		//createFile(file);
 		System.out.println("Blocks written to file!\n");
 		
 		//Close the file
@@ -48,10 +48,8 @@ public class TestDriver {
 
 		deleteFriend(file,"Jayne","Doe");
 
-		addFriend(file,new Friend("Test","Add","1234567890"));
-		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
-		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
-		addFriend(file, new Friend("Ricky", "He", "2153596726"));
+		;
+
 
 		//Close the file
 		file.close();
