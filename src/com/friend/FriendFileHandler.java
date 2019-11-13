@@ -96,7 +96,15 @@ public class FriendFileHandler implements Closeable {
 					bPrev.setNext(next);
 					raf.seek(prev);
 					bPrev.write(raf);
-					
+
+					//Change the curr block to null
+					raf.seek(loc);
+					Block bCurr = new Block();
+					bCurr.read(raf);
+					bCurr.setData(new Friend());
+					bCurr.write(raf);
+
+
 					raf.seek(next);
 					//Go to next block to change prev location
 					Block bNext = new Block();
