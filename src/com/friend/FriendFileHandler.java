@@ -206,6 +206,23 @@ public class FriendFileHandler implements Closeable {
 		}
 		return 0;
 	}
+
+	//Prints out only valid friends
+	private void printFriends(){
+		try{
+			raf.seek(16);
+			curr.read(raf);
+			while (true){
+				if(!curr.isDeleted()){
+					System.out.println(curr);
+				}
+			}
+		}catch (EOFException e){
+
+		}catch (IOException e){
+
+		}
+	}
 	
 	private void seekNext() throws IOException{
 		loc = raf.getFilePointer() + Block.BYTES;
