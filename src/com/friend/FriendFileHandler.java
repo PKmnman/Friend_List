@@ -171,7 +171,7 @@ public class FriendFileHandler implements Closeable {
 				b.write(raf);
 			}
 			//If freepointer = datapointer
-			if (freePointer == dataPointer){
+			if (freePointer == dataPointer || dataPointer == -1){
 				dataPointer = getNewDataPointer();
 			}
 
