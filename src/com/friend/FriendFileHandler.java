@@ -142,47 +142,47 @@ public class FriendFileHandler implements Closeable {
 		//TODO: COpy over add method
 		try {
 			//Seek to FP
-			file.seek(8);
-			long open = file.readLong();
+			raf.seek(8);
+			long open = raf.readLong();
 			//Seek to next free block
-			file.seek(open);
+			raf.seek(open);
 
 			Block b = new Block();
 			//Read the block
-			b.read(file);
+			b.read(raf);
 			//Set the data of the block
-			b.setData(friend);
+			b.setData(f);
 			//Store the free pointer to the next block
 			//TODO: Should change this to a search for the next free block
-			long newOpen = file.getFilePointer();
+			long newOpen = raf.getFilePointer();
 
 			//Write Block
-			file.seek(open);
-			long loc = file.getFilePointer();
+			raf.seek(open);
+			long loc = raf.getFilePointer();
 			long prev = b.getPrev();
 			long next = b.getNext();
-			b.write(file);
+			b.write(raf);
 
 			//Edit the prev block to update its next data
-			file.seek(prev);
-			b.read(file);
+			raf.seek(prev);
+			b.read(raf);
 			b.setNext(loc);
-			file.seek(prev);
-			b.write(file);
+			raf.seek(prev);
+			b.write(raf);
 
 			//Edit the next Block to update its prev data
-			file.seek(next);
-			b.read(file);
+			raf.seek(next);
+			b.read(raf);
 			b.setPrev(loc);
-			b.write(file);
+			b.write(raf);
 
 
 			//Locate next free block
-			long fP = searchNextFree(file);
+			long fP = searchNextFree();
 			//Update DP and FP
-			file.seek(8);
+			raf.seek(8);
 			//TODO: DP shouldn't necessarily change on every insert
-			file.writeLong(fP);
+			raf.writeLong(fP);
 
 
 		} catch (IOException e) {

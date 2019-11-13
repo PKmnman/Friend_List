@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContextMenu;
@@ -45,7 +46,10 @@ public class MainMenu extends BorderPane {
 	
 	@FXML private ContextMenu tableContextMenu;
 	
+	private ObservableList<Block> fileBlocks;
 	private ObservableList<Friend> friends;
+	
+	private ObservableMap<Long, Friend> friendMap;
 	
 	/**
 	 * Default constructor for that constructs and loads the main menu UI.
@@ -106,6 +110,7 @@ public class MainMenu extends BorderPane {
 		Block b = new Block();
 		while (b != null){
 			b = FriendApp.fileHandler.readNext();
+			fileBlocks.add(b);
 			if(b != null && !b.isDeleted()){
 				friends.add(b.getData());
 			}
