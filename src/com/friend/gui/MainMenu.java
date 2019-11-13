@@ -1,5 +1,6 @@
 package com.friend.gui;
 
+import com.friend.Block;
 import com.friend.Friend;
 import com.friend.PhoneNumber;
 import javafx.application.Application;
@@ -109,14 +110,13 @@ public class MainMenu extends BorderPane {
 	private ObservableList<Friend> loadRecords(){
 		ObservableList<Friend> list = FXCollections.observableArrayList();
 		
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
-		list.add(new Friend("Gary", "Reeves", "2037367606"));
+		boolean eof = false;
+		Block b = new Block();
+		while (b != null){
+			b = FriendApp.fileHandler.readNext();
+			
+			
+		}
 		
 		return list;
 	}

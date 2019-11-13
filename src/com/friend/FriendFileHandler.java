@@ -52,23 +52,19 @@ public class FriendFileHandler implements Closeable {
 		return null;
 	}
 	
-	private Block readNext(){
+	public Block readNext(){
 		if(curr != null && curr.getNext() >= (16 + Block.BYTES)){
-			Block next = new Block();
-			try {
-				loc = curr.getNext();
-				raf.seek(loc);
-				next.read(raf);
-				
-				if(next.getData().equals(new Friend())){
-				
+			while(curr.isDeleted()) {
+				try {
+					loc = curr.getNext();
+					raf.seek(loc);
+					curr.read(raf);
+				} catch (IOException e) {
+					System.err.println("Error reading Block");
+					System.exit(-1);
 				}
-				
-			}catch (IOException e){
-				System.err.println("Error reading Block");
-				System.exit(-1);
 			}
-			return next;
+			return curr;
 		}
 		return null;
 	}

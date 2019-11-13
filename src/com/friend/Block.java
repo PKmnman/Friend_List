@@ -57,7 +57,6 @@ public class Block {
         return this.friendObject == null;
     }
 
-
     public void setPrev(long prevNum){
         this.prev = prevNum;
     }
