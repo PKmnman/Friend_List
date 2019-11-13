@@ -107,9 +107,11 @@ public class MainMenu extends BorderPane {
 		while (b != null){
 			b = FriendApp.fileHandler.read();
 			
-			if(b != null && !b.isDeleted()){
-				friends.add(b.getData());
+			if(b == null || b.isDeleted()){
+				break;
 			}
+			
+			friends.add(b.getData());
 		}
 		
 		friends.add(new Friend("Johny", "Test", "0023456978"));

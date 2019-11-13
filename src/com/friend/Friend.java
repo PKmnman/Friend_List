@@ -27,7 +27,7 @@ public class Friend {
 	}
 
 	public Friend(){
-		this(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_NUMBER);
+		this(DEFAULT_NAME, DEFAULT_NAME, new PhoneNumber("0000000000"));
 	}
 
 	/**

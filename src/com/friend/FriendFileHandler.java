@@ -70,10 +70,6 @@ public class FriendFileHandler implements Closeable {
 			System.err.println("Error reading file");
 		}
 		
-		if(b.isDeleted()){
-			b.setData(null);
-		}
-		
 		return b;
 	}
 	
