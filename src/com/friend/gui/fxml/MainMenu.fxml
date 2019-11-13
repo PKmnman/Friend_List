@@ -54,7 +54,7 @@
          <children>
             <Button mnemonicParsing="false" text="Add Friend..." />
              <Button mnemonicParsing="false" text="Edit Friend..." />
-            <Button mnemonicParsing="false" text="Delete..." />
+            <Button onAction="#onDeleteAction" mnemonicParsing="false" text="Delete..." />
          </children>
          <padding>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
