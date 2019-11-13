@@ -13,6 +13,7 @@ public class FriendFileHandler implements Closeable {
 	
 	private long freePointer;
 	private long dataPointer;
+	private long next = -1;
 	
 	private RandomAccessFile raf;
 	private Block curr;
@@ -60,10 +61,15 @@ public class FriendFileHandler implements Closeable {
 		Block b = new Block();
 		
 		try {
-			if(raf.getFilePointer() < 16){
-				raf.seek(16);
+			if(dataPointer == -1){
+				return null;
+			}else if (next == -1){
+				raf.seek(dataPointer);
+			}else if(raf.getFilePointer() != next){
+				raf.seek(next);
 			}
 			b.read(raf);
+			next = b.getNext();
 		} catch (EOFException e) {
 			return null;
 		} catch (IOException e) {
@@ -127,7 +133,7 @@ public class FriendFileHandler implements Closeable {
 	}
 	
 	public void addFriend(Friend f){
-		//TODO: COpy over add method
+		
 		try {
 			//Seek to FP
 			raf.seek(8);
