@@ -4,7 +4,6 @@ import com.friend.FriendFileHandler;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,21 +36,10 @@ public class FriendApp extends Application {
 		Scene appScene = new Scene(mainMenu);
 
 		primaryStage.setTitle("Friend List");
-		primaryStage.setOnShowing(this::loadFriendList);
 		primaryStage.setScene(appScene);
 		primaryStage.sizeToScene();
 		primaryStage.setResizable(false);
 		primaryStage.show();
-	}
-	
-	/**
-	 * Loads the list of Friends from the program's storage file
-	 * @param e the OnShowing event
-	 */
-	private void loadFriendList(WindowEvent e){
-		if(e.getEventType().equals(WindowEvent.WINDOW_SHOWING)){
-			mainMenu.loadRecords();
-		}
 	}
 	
 	private static void initFriendData() {

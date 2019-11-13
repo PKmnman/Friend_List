@@ -92,7 +92,7 @@ public class MainMenu extends BorderPane {
 			return row;
 		});
 		
-		displayTable.setItems(friends);
+		displayTable.setItems(loadRecords());
 		displayTable.refresh();
 		//TODO: Load the "Add/Edit Friend" dialog
 		
@@ -111,6 +111,8 @@ public class MainMenu extends BorderPane {
 				friends.add(b.getData());
 			}
 		}
+		
+		friends.add(new Friend("Johny", "Test", "0023456978"));
 		
 		return friends;
 	}
