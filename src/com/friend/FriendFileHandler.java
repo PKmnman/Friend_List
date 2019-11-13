@@ -136,10 +136,8 @@ public class FriendFileHandler implements Closeable {
 		
 		try {
 			//Seek to FP
-			raf.seek(8);
-			long open = raf.readLong();
 			//Seek to next free block
-			raf.seek(open);
+			raf.seek(freePointer);
 
 			Block b = new Block();
 			//Read the block
@@ -151,7 +149,7 @@ public class FriendFileHandler implements Closeable {
 			long newOpen = raf.getFilePointer();
 
 			//Write Block
-			raf.seek(open);
+			raf.seek(freePointer);
 			long loc = raf.getFilePointer();
 			long prev = b.getPrev();
 			long next = b.getNext();
@@ -178,14 +176,33 @@ public class FriendFileHandler implements Closeable {
 			//Locate next free block
 			long fP = searchNextFree();
 			//Update DP and FP
-			raf.seek(8);
 			//TODO: DP shouldn't necessarily change on every insert
-			raf.writeLong(fP);
+			freePointer = fP;
 
 
 		} catch (IOException e) {
 
 		}
+	}
+	//Gets the first Data block
+	private long getDataPointer(){
+		try{
+			raf.seek(16);
+			while (true){
+				loc = raf.getFilePointer();
+				curr.read(raf);
+				if (!curr.isDeleted()){
+					dataPointer = loc;
+					return loc;
+				}
+			}
+		}catch (EOFException e){
+			return -1;
+		}catch (IOException e){
+			System.err.println("Error reading file");
+			System.exit(-1);
+		}
+		return -1;
 	}
 	//Searches for the next Free block offset
 	private long searchNextFree(){
