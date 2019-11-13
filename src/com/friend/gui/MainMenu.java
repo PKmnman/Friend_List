@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ContextMenu;
@@ -100,6 +101,10 @@ public class MainMenu extends BorderPane {
 		//this.addDialog.init();
 	}
 
+	public void onDeleteAction(ActionEvent e){
+		System.out.println("Delete me!!!");
+	}
+	
 	ObservableList<Friend> loadRecords(){
 		friends = FXCollections.observableArrayList();
 		

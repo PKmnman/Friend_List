@@ -1,11 +1,7 @@
 package com.friend.gui;
 
-import com.friend.Friend;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.DialogPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -15,16 +11,21 @@ class AddDialog extends VBox {
 
 	private static final URL FXML_FILE = AddDialog.class.getResource("/com/friend/gui/fxml/AddDialog.fxml");
 
-	private FXMLLoader loader;
-
-	AddDialog(FXMLLoader loader){
-		this.loader = loader;
-	}
-
-	void init(){
-		loader.setLocation(FXML_FILE);
-		loader.setRoot(this);
-		loader.setController(this);
+	AddDialog(){
+		try {
+			//Create a FXMLLoader and set "this" as it's root and controller
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/friend/gui/fxml/AddDialog.fxml"));
+			loader.setRoot(this);
+			loader.setController(this);
+			//Load the UI
+			loader.load();
+		} catch (IOException e) {
+			//Handle any load exceptions and exit
+			System.err.printf("[%s] <SEVERE> Failed to load FXML file \"%s\"%n", getClass().getSimpleName(), FXML_FILE.getFile());
+			System.err.printf("[%s] <SEVERE> Caused by: \"%s\"%n", getClass().getSimpleName(), e.getCause());
+			Platform.exit();
+			System.exit(-1);
+		}
 	}
 
 
