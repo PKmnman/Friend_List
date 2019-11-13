@@ -7,13 +7,16 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
@@ -43,7 +46,10 @@ public class MainMenu extends BorderPane {
 	
 	@FXML private ContextMenu tableContextMenu;
 	
+	private ObservableList<Block> fileBlocks;
 	private ObservableList<Friend> friends;
+	
+	private ObservableMap<Long, Friend> friendMap;
 	
 	/**
 	 * Default constructor for that constructs and loads the main menu UI.
@@ -81,7 +87,7 @@ public class MainMenu extends BorderPane {
 		//Setup the table display
 		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-		
+		phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 		
 		//This adds the context menu to each row
 		displayTable.setRowFactory(p -> {
@@ -101,29 +107,16 @@ public class MainMenu extends BorderPane {
 	ObservableList<Friend> loadRecords(){
 		friends = FXCollections.observableArrayList();
 		
-		boolean eof = false;
 		Block b = new Block();
 		while (b != null){
 			b = FriendApp.fileHandler.readNext();
+			fileBlocks.add(b);
 			if(b != null && !b.isDeleted()){
 				friends.add(b.getData());
 			}
 		}
 		
 		return friends;
-	}
-	
-	private class CellFactory implements Callback<TableColumn<Friend, String>, TableCell<Friend, String>>{
-		
-		private CellFactory(){}
-		
-		@Override
-		public TableCell<Friend, String> call(TableColumn<Friend, String> param) {
-			TableCell<Friend, String> cell = new TableCell<>();
-			cell.setContextMenu(tableContextMenu);
-			return cell;
-		}
-		
 	}
 
 }
