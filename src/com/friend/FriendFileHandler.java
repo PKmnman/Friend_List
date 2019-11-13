@@ -113,10 +113,9 @@ public class FriendFileHandler implements Closeable {
 					bp.setPrev(prev);
 					raf.seek(next);
 					bp.write(raf);
-					
-					raf.seek(8);
-					//Change FP to current block
-					raf.writeLong(curr);
+
+					freePointer = curr;
+					dataPointer = getNewDataPointer();
 					
 					break;
 				}
@@ -131,6 +130,7 @@ public class FriendFileHandler implements Closeable {
 		try {
 			//Seek to FP
 			//Seek to next free block
+
 			raf.seek(freePointer);
 
 			Block b = new Block();
@@ -140,7 +140,6 @@ public class FriendFileHandler implements Closeable {
 			b.setData(f);
 			//Store the free pointer to the next block
 			//TODO: Should change this to a search for the next free block
-			long newOpen = raf.getFilePointer();
 
 			//Write Block
 			raf.seek(freePointer);
@@ -165,6 +164,10 @@ public class FriendFileHandler implements Closeable {
 				b.setPrev(loc);
 				b.write(raf);
 			}
+			//If freepointer = datapointer
+			if (freePointer == dataPointer){
+				dataPointer = getNewDataPointer();
+			}
 
 
 			//Locate next free block
@@ -179,7 +182,7 @@ public class FriendFileHandler implements Closeable {
 		}
 	}
 	//Gets the first Data block
-	private long getDataPointer(){
+	private long getNewDataPointer(){
 		try{
 			raf.seek(16);
 			while (true){
@@ -254,6 +257,14 @@ public class FriendFileHandler implements Closeable {
 	private void seekToData() throws IOException{
 		raf.seek(dataPointer);
 		loc = raf.getFilePointer();
+	}
+
+	public long getFreePointer(){
+		return freePointer;
+	}
+
+	public long getDataPointer(){
+		return dataPointer;
 	}
 	
 	public void forcePointerUpdate() throws IOException{
