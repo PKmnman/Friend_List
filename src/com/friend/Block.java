@@ -52,7 +52,10 @@ public class Block {
 	    this.next = file.readLong();
     }
     //Data to see if the block was deleted or not
-
+    //Checks if the block is a null block
+    public boolean isDeleted(){
+        return this.friendObject == null;
+    }
 
 
     public void setPrev(long prevNum){

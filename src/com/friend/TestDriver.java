@@ -213,10 +213,7 @@ public class TestDriver {
 			e.printStackTrace();
 		}
 	}
-	//Checks if the block is a null block
-	public boolean isDeleted(Block b){
-		return b.getData() == new Friend();
-	}
+
 
 	public static void printFile(RandomAccessFile file) {
 		long v;
