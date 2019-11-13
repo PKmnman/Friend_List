@@ -49,6 +49,9 @@ public class TestDriver {
 		deleteFriend(file,"Jayne","Doe");
 
 		addFriend(file,new Friend("Test","Add","1234567890"));
+		addFriend(file, new Friend("Gary", "Reeves", "2037367606"));
+		addFriend(file, new Friend("Jayne", "Doe", "2031122200"));
+		addFriend(file, new Friend("Ricky", "He", "2153596726"));
 
 		//Close the file
 		file.close();
@@ -156,18 +159,21 @@ public class TestDriver {
 			b.write(file);
 
 			//Edit the prev block to update its next data
-			file.seek(prev);
-			b.read(file);
-			b.setNext(loc);
-			file.seek(prev);
-			b.write(file);
+			if(prev >-1) {
+				file.seek(prev);
+				b.read(file);
+				b.setNext(loc);
+				file.seek(prev);
+				b.write(file);
+			}
 
 			//Edit the next Block to update its prev data
-			file.seek(next);
-			b.read(file);
-			b.setPrev(loc);
-			b.write(file);
-
+			if (prev > -1) {
+				file.seek(next);
+				b.read(file);
+				b.setPrev(loc);
+				b.write(file);
+			}
 
 			//Locate next free block
 			long fP = searchNextFree(file);
