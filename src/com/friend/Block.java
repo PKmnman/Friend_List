@@ -11,6 +11,7 @@ public class Block {
     private long prev;
     private long next;
 
+
     public Block(Friend friend, long prev, long next){
         this.friendObject = friend;
 	    this.prev = prev;
@@ -50,6 +51,9 @@ public class Block {
     	this.prev = file.readLong();
 	    this.next = file.readLong();
     }
+    //Data to see if the block was deleted or not
+
+
 
     public void setPrev(long prevNum){
         this.prev = prevNum;

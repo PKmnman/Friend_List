@@ -181,12 +181,19 @@ public class TestDriver {
 
 					file.seek(b.getPrev());
 					//Go back to prev block to change next location
-					Block bp = new Block(new Friend(),16L, 178L);
+					Block bp = new Block();
 					bp.read(file);
-					bp.setNext(178);
+					bp.setNext(next);
 					//write the block to the file
 					file.seek(b.getPrev());
 					bp.write(file);
+
+					//Change the curr block to null
+					file.seek(curr);
+					bp.read(file);
+					bp.setData(new Friend());
+					bp.write(file);
+
 
 					file.seek(b.getNext());
 					//Go to next block to change prev location
@@ -205,6 +212,10 @@ public class TestDriver {
 		}catch (IOException e){
 			e.printStackTrace();
 		}
+	}
+	//Checks if the block is a null block
+	public boolean isDeleted(Block b){
+		return b.getData() == new Friend();
 	}
 
 	public static void printFile(RandomAccessFile file) {
