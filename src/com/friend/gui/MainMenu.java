@@ -10,7 +10,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.*;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -99,13 +102,12 @@ public class MainMenu extends BorderPane {
 	}
 	
 	/**
-	 * Performs delete operation on friend object
-	 * @param e
+	 * Performs delete operation on friend object. Linked in fxml.
+	 * @param e the event fired
 	 */
 	public void onDeleteAction(ActionEvent e){
 		System.out.println("Delete me!!!");
-		MenuItem src = ((MenuItem) e.getSource());
-		System.out.println(src);
+		System.out.println(e.getSource());
 	}
 	
 	ObservableList<Friend> loadRecords(){
