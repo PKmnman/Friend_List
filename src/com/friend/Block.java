@@ -17,10 +17,6 @@ public class Block {
 	    this.next = next;
     }
 
-    public Block(Friend friend, long prev){
-    	this(friend, 0, 0);
-    }
-
     public Block(Friend friend){
     	this(friend, 0L, 0L);
     }
