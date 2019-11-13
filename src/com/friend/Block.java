@@ -30,7 +30,7 @@ public class Block {
     }
 
 	public Block(){
-		this(new Friend());
+		this(Friend.DEFAULT);
 	}
 
     public void write(RandomAccessFile file) throws IOException {
@@ -46,6 +46,11 @@ public class Block {
 
     public void read(RandomAccessFile file) throws IOException{
 		this.friendObject.read(file);
+		
+		if(friendObject.equals(Friend.DEFAULT)){
+			this.friendObject = null;
+		}
+		
     	this.prev = file.readLong();
 	    this.next = file.readLong();
     }
