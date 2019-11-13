@@ -148,6 +148,7 @@ public class TestDriver {
 			//Write Block
 			file.seek(open);
 			b.write(file);
+
 			
 			//Update DP and FP
 			file.seek(8);
@@ -158,6 +159,24 @@ public class TestDriver {
 		} catch (IOException e) {
 		
 		}
+	}
+
+	public long searchNextFree(RandomAccessFile file){
+		try{
+			file.seek(16);
+			Block b = new Block();
+			long loc;
+			while (true){
+				loc = file.getFilePointer();
+				b.read(file);
+				if (b.isDeleted()){
+					return loc;
+				}
+			}
+		}catch (IOException e) {
+
+		}
+		return -1;
 	}
 	
 	public static void deleteFriend(RandomAccessFile file, String firstName, String lastName){

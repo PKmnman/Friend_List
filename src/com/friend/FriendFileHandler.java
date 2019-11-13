@@ -141,8 +141,21 @@ public class FriendFileHandler implements Closeable {
 	public void addFriend(Friend f){
 		//TODO: COpy over add method
 	}
-	
+	//Searches for the next Free block offset
 	private long searchNextFree(){
+		try{
+			raf.seek(16);
+			while (true){
+				loc = raf.getFilePointer();
+				curr.read(raf);
+				if (curr.isDeleted()){
+					freePointer = loc;
+					return loc;
+				}
+			}
+		}catch (IOException e) {
+
+		}
 		return 0;
 	}
 	
