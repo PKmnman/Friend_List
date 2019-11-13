@@ -73,7 +73,7 @@ public class FriendFileHandler implements Closeable {
 		return b;
 	}
 	
-	public void deleteFriend(String first, String last){
+	public void deleteFriend(Friend target){
 		try{
 			raf.seek(16);
 			Block b = new Block();
@@ -83,7 +83,7 @@ public class FriendFileHandler implements Closeable {
 				long loc = raf.getFilePointer();
 				b.read(raf);
 				f = b.getData();
-				if (f.compareNames(first,last)){
+				if (f.equals(target)){
 					long prev = b.getPrev();
 					//Previous block location
 					long next = b.getNext();
@@ -103,7 +103,7 @@ public class FriendFileHandler implements Closeable {
 					//Change the curr block to null
 					raf.seek(curr);
 					bp.read(raf);
-					bp.setData(new Friend());
+					bp.setData(Friend.DEFAULT);
 					bp.write(raf);
 					
 					

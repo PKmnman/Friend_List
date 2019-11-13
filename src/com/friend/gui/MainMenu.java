@@ -109,10 +109,13 @@ public class MainMenu extends BorderPane {
 	 * @param e the event fired
 	 */
 	public void onDeleteAction(ActionEvent e){
-		System.out.println("Delete me!!!");
-		System.out.println(e.getSource());
+		Friend f = displayTable.getSelectionModel().getSelectedItem();
+		System.out.println("Deleting " + f.getFirstName() + " " + f.getLastName());
+		friends.remove(f);
+		
+		//Delete from file
+		FriendApp.fileHandler.deleteFriend(f);
 	}
-
 
 	public void onAddAction(ActionEvent event){
 		AddDialog dialog = new AddDialog();
@@ -123,6 +126,7 @@ public class MainMenu extends BorderPane {
 		stage.setScene(scene);
 		stage.showAndWait();
 	}
+	
 	ObservableList<Friend> loadRecords(){
 		friends = FXCollections.observableArrayList();
 		
@@ -137,7 +141,7 @@ public class MainMenu extends BorderPane {
 			friends.add(b.getData());
 		}
 		
-		friends.add(new Friend("Johny", "Test", "0023456978"));
+		//friends.add(new Friend("Johny", "Test", "0023456978"));
 		
 		return friends;
 	}
