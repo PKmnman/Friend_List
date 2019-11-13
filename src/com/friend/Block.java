@@ -18,10 +18,6 @@ public class Block {
 	    this.next = next;
     }
 
-    public Block(Friend friend, long prev){
-    	this(friend, 0, 0);
-    }
-
     public Block(Friend friend){
     	this(friend, 0L, 0L);
     }
@@ -31,7 +27,7 @@ public class Block {
     }
 
 	public Block(){
-		this(new Friend());
+		this(Friend.DEFAULT);
 	}
 
     public void write(RandomAccessFile file) throws IOException {
@@ -47,6 +43,11 @@ public class Block {
 
     public void read(RandomAccessFile file) throws IOException{
 		this.friendObject.read(file);
+		
+		if(friendObject.equals(Friend.DEFAULT)){
+			this.friendObject = null;
+		}
+		
     	this.prev = file.readLong();
 	    this.next = file.readLong();
     }
@@ -55,7 +56,6 @@ public class Block {
     public boolean isDeleted(){
         return this.friendObject == null;
     }
-
 
     public void setPrev(long prevNum){
         this.prev = prevNum;
