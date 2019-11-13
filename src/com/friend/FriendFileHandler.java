@@ -26,15 +26,10 @@ public class FriendFileHandler implements Closeable {
 			raf.seek(0);
 		}
 		
-		curr = new Block(null);
+		curr = null;
 		dataPointer = raf.readLong();
 		freePointer = raf.readLong();
 		loc = dataPointer;
-		
-		if(dataPointer != -1){
-			seekToData();
-			curr.read(raf);
-		}
 	}
 	
 	private void populateFile() throws IOException{
@@ -61,28 +56,25 @@ public class FriendFileHandler implements Closeable {
 		b.write(raf);
 	}
 	
-	public Block readCurr(){
-		return curr;
-	}
-	
-	public Block readNext(){
-		if(curr != null && curr.getNext() >= (16 + Block.BYTES)){
-			Block next = curr;
-			while(curr.isDeleted()) {
-				try {
-					loc = next.getNext();
-					raf.seek(loc);
-					next.read(raf);
-				} catch (EOFException e) {
-					return null;
-				} catch (IOException e){
-					System.err.println("Error reading Block");
-					System.exit(-1);
-				}
+	public Block read(){
+		Block b = new Block();
+		
+		try {
+			if(raf.getFilePointer() < 16){
+				raf.seek(16);
 			}
-			return curr;
+			b.read(raf);
+		} catch (EOFException e) {
+			return null;
+		} catch (IOException e) {
+			System.err.println("Error reading file");
 		}
-		return null;
+		
+		if(b.isDeleted()){
+			b.setData(null);
+		}
+		
+		return b;
 	}
 	
 	public void deleteFriend(String first, String last){

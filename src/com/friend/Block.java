@@ -27,7 +27,7 @@ public class Block {
     }
 
 	public Block(){
-		this(Friend.DEFAULT);
+		this(new Friend());
 	}
 
     public void write(RandomAccessFile file) throws IOException {
@@ -42,19 +42,14 @@ public class Block {
     }
 
     public void read(RandomAccessFile file) throws IOException{
-		this.friendObject.read(file);
-		
-		if(friendObject.equals(Friend.DEFAULT)){
-			this.friendObject = null;
-		}
-		
+    	this.friendObject.read(file);
     	this.prev = file.readLong();
 	    this.next = file.readLong();
     }
     //Data to see if the block was deleted or not
     //Checks if the block is a null block
     public boolean isDeleted(){
-        return this.friendObject == null;
+        return this.friendObject == null || this.friendObject.equals(Friend.DEFAULT);
     }
 
     public void setPrev(long prevNum){
@@ -74,7 +69,7 @@ public class Block {
     }
 
     public Friend getData(){
-    	return friendObject;
+    	return this.friendObject;
     }
 
     public void setData(Friend friend){

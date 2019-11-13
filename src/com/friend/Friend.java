@@ -10,7 +10,7 @@ public class Friend {
 	private static final int MAX_NAME_LENGTH = 15;
 
 	public static final int BYTES = ((Character.BYTES * MAX_NAME_LENGTH) * 2) + PhoneNumber.BYTES;
-	public static final Friend DEFAULT = new Friend();
+	public static final Friend DEFAULT = new Friend(DEFAULT_NAME, DEFAULT_NAME, DEFAULT_NUMBER);
 	
 	
 	private String lastName, firstName;
@@ -117,7 +117,7 @@ public class Friend {
 	public boolean equals(Object o){
 		if(o instanceof Friend){
 			Friend f = (Friend)o;
-			return (f.getFirstName().equalsIgnoreCase(this.firstName) && f.getLastName().equalsIgnoreCase(this.lastName) && f.getPhoneNumber().equals(this.phoneNumber));
+			return (f.firstName.equalsIgnoreCase(this.firstName) && (f.lastName.equalsIgnoreCase(this.lastName)) && (f.getPhoneNumber().equals(this.phoneNumber)));
 		}
 		return false;
 	}

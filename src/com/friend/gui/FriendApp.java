@@ -55,7 +55,7 @@ public class FriendApp extends Application {
 	}
 	
 	private static void initFriendData() {
-		URL friendDataFile = FriendApp.class.getResource("/files/friends.bdf");
+		URL friendDataFile = FriendApp.class.getResource("/files/testFile.dat");
 		if(friendDataFile == null){
 			friendFile = new File("/files/friends.bdf");
 			if(friendFile.exists()){
