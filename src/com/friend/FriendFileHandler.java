@@ -114,6 +114,7 @@ public class FriendFileHandler implements Closeable {
 					raf.seek(curr);
 					bp.read(raf);
 					bp.setData(Friend.DEFAULT);
+					raf.seek(curr);
 					bp.write(raf);
 					
 					
@@ -215,60 +216,14 @@ public class FriendFileHandler implements Closeable {
 	}
 	//Searches for the next Free block offset
 	private long searchNextFree(){
-		/*try{
-			raf.seek(16);
-			
-			Block next;
-			Block prev;
-			
-			do{
-				loc = getFilePointer();
-				curr.read(raf);
-				
-				next = null; prev = null;
-				
-				if(curr.getPrev() >= 16){
-					raf.seek(curr.getPrev());
-					prev = new Block();
-					prev.read(raf);
-				}
-				
-				if(curr.getNext() >= 16 + Block.BYTES){
-					raf.seek(curr.getNext());
-					next = new Block();
-					next.read(raf);
-				}
-				
-				if((next != null) && (next.getPrev() != loc)){
-					return loc;
-				}else if (next == null){
-					return loc + Block.BYTES;
-				}
-				
-				if((prev != null) && (prev.getNext() != loc)){
-					return loc;
-				}
-				
-				raf.seek(loc + Block.BYTES);
-				
-			}while (curr.getNext() != -1);
-			
-			return loc;
-		} catch (EOFException e){
-			return -1;
-		} catch (IOException e) {
-			System.err.println("Error reading file");
-			System.exit(-1);
-		}*/
 		try{
 			raf.seek(16);
-			loc = raf.getFilePointer();
 			while (true) {
+				loc = raf.getFilePointer();
 				curr.read(raf);
-				if (curr == null){
+				if (curr.isDeleted()){
 					return loc;
 				}
-				return -1;
 			}
 		}catch (EOFException e){
 			System.err.println(e.getMessage());
