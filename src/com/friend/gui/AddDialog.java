@@ -86,7 +86,7 @@ class AddDialog extends VBox {
 						return new PhoneNumber(string);
 					}
 				},
-				null
+				new PhoneNumber()
 		);
 		
 		phoneNumberField.setTextFormatter(formatter);
@@ -120,8 +120,8 @@ class AddDialog extends VBox {
 		return lastNameField.textProperty().getValueSafe();
 	}
 	
-	public PhoneNumber getPhoneNumber(){
-		return ((TextFormatter<PhoneNumber>) phoneNumberField.getTextFormatter()).getValue();
+	public String getPhoneNumber(){
+		return phoneNumberField.textProperty().getValueSafe();
 	}
 
 }
