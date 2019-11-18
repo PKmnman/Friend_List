@@ -125,10 +125,8 @@ public class FriendFileHandler implements Closeable {
 					raf.seek(next);
 					bp.write(raf);
 
-					freePointer = curr;
-					if (freePointer == dataPointer){
-						dataPointer = next;
-					}
+					freePointer = searchNextFree();
+					dataPointer = getNewDataPointer();
 
 
 					break;
@@ -205,7 +203,7 @@ public class FriendFileHandler implements Closeable {
 			while (true){
 				loc = raf.getFilePointer();
 				curr.read(raf);
-				if (!curr.isDeleted()){
+				if (!curr.getData().compareNames("Nil","Nil")){
 					return loc;
 				}
 			}
@@ -224,7 +222,7 @@ public class FriendFileHandler implements Closeable {
 			while (true) {
 				loc = raf.getFilePointer();
 				curr.read(raf);
-				if (curr.isDeleted()){
+				if (curr.getData().compareNames("Nil","Nil")){
 					return loc;
 				}
 			}
