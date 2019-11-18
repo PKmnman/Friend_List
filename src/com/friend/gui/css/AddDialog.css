@@ -1,0 +1,31 @@
+﻿.button.ui-button {
+	-fx-background-color: #2a80a2;
+	-fx-background-radius: 0;
+    -fx-font-family: "arial";
+    -fx-font-size: 10pt;
+    -fx-text-fill: white;
+}
+
+.button.ui-button:default {
+	-fx-background-color: #2a80a2;
+	-fx-background-radius: 0;
+    -fx-font-family: "arial";
+    -fx-font-size: 10pt;
+    -fx-text-fill: white;
+}
+
+.button.ui-button:cancel {
+	-fx-background-color: #2a80a2;
+	-fx-background-radius: 0;
+    -fx-font-family: "arial";
+    -fx-font-size: 10pt;
+    -fx-text-fill: white;
+}
+
+.ui-button:hover{
+    -fx-background-color: #3490b4;
+}
+
+.pane.button-pane{
+    -fx-background-color: #2a80a2;
+}
