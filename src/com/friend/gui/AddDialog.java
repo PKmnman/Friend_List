@@ -78,7 +78,10 @@ class AddDialog extends VBox {
 				new StringConverter<PhoneNumber>() {
 					@Override
 					public String toString(PhoneNumber object) {
-						return object.toString();
+						if(object != null){
+							return object.toString();
+						}
+						return null;
 					}
 					
 					@Override

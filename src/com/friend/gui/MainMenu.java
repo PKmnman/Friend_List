@@ -6,9 +6,7 @@ import com.friend.PhoneNumber;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.ListProperty;
-import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -91,21 +89,10 @@ public class MainMenu extends BorderPane {
 			row.setContextMenu(tableContextMenu);
 			return row;
 		});
-		
-		loadRecords();
-		displayTable.itemsProperty().bind(friends);
-		
-		//This listener will update the friend file whenever a change is made
-		friends.addListener((ListChangeListener<Friend>) c -> {
-			while(c.next()){
-				if(c.wasRemoved()){
-					FriendApp.fileHandler.deleteFriend(c.getRemoved().get(0));
-				}
-			}
-		});
+		//Load friends from list and link to table
+		displayTable.setItems(loadRecords());
 		
 		displayTable.refresh();
-		//TODO: Load the "Add/Edit Friend" dialog
 	}
 	
 	/**
@@ -116,40 +103,42 @@ public class MainMenu extends BorderPane {
 		if(!friends.isEmpty()){
 			Friend f = displayTable.getSelectionModel().getSelectedItem();
 			System.out.println("Deleting " + f.getFirstName() + " " + f.getLastName());
-			friends.remove(f);
-			
+			FriendApp.fileHandler.deleteFriend(f);
+			displayTable.getItems().remove(f);
 			displayTable.refresh();
 		}
 	}
 
 	public void onAddAction(ActionEvent event){
 		AddDialog dialog = new AddDialog(this);
+		//Show the dialog and wait for it to close
 		dialog.showAndWait();
 		
 		//Only add if the friend being added is valid
 		if(dialog.isComplete()){
 			Friend f = new Friend(dialog.getFirstName(), dialog.getLastName(), dialog.getPhoneNumber());
 			FriendApp.fileHandler.addFriend(f);
-			friends.add(f);
+			displayTable.getItems().add(f);
 		}
 		
 	}
 	
 	private ObservableList<Friend> loadRecords() {
-		friends = new SimpleListProperty<>(this, "friends", FXCollections.observableArrayList());
+		ObservableList<Friend> list = FXCollections.observableArrayList();
+		//Create block to iterates
+		boolean isNull = false;
 		
-		Block b = new Block();
-		while (b != null) {
-			b = FriendApp.fileHandler.read();
-			
-			if (b == null || b.isDeleted()) {
+		do{
+			Block b = FriendApp.fileHandler.read();
+			isNull = b == null;
+			if (isNull || b.isDeleted()) {
 				break;
 			}
 			
-			friends.add(b.getData());
-		}
+			list.add(b.getData());
+		}while (!isNull);
 		
-		return friends;
+		return list;
 	}
 	
 	public ObservableList<Friend> getFriends(){
