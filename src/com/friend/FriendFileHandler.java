@@ -1,5 +1,7 @@
 package com.friend;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.Closeable;
 import java.io.EOFException;
 import java.io.IOException;
@@ -213,7 +215,7 @@ public class FriendFileHandler implements Closeable {
 	}
 	//Searches for the next Free block offset
 	private long searchNextFree(){
-		try{
+		/*try{
 			raf.seek(16);
 			
 			Block next;
@@ -257,6 +259,21 @@ public class FriendFileHandler implements Closeable {
 		} catch (IOException e) {
 			System.err.println("Error reading file");
 			System.exit(-1);
+		}*/
+		try{
+			raf.seek(16);
+			loc = raf.getFilePointer();
+			while (true) {
+				curr.read(raf);
+				if (curr == null){
+					return loc;
+				}
+				return -1;
+			}
+		}catch (EOFException e){
+			System.err.println(e.getMessage());
+		}catch (IOException e){
+			e.getMessage();
 		}
 		return -1;
 	}
