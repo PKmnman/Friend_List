@@ -126,8 +126,11 @@ public class FriendFileHandler implements Closeable {
 					bp.write(raf);
 
 					freePointer = curr;
-					dataPointer = getNewDataPointer();
-					
+					if (freePointer == dataPointer){
+						dataPointer = next;
+					}
+
+
 					break;
 				}
 			}
@@ -203,7 +206,6 @@ public class FriendFileHandler implements Closeable {
 				loc = raf.getFilePointer();
 				curr.read(raf);
 				if (!curr.isDeleted()){
-					dataPointer = loc;
 					return loc;
 				}
 			}
