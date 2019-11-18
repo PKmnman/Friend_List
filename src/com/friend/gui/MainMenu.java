@@ -100,7 +100,7 @@ public class MainMenu extends BorderPane {
 	 * @param e the event fired
 	 */
 	public void onDeleteAction(ActionEvent e){
-		if(!friends.isEmpty()){
+		if(!displayTable.getItems().isEmpty()){
 			Friend f = displayTable.getSelectionModel().getSelectedItem();
 			System.out.println("Deleting " + f.getFirstName() + " " + f.getLastName());
 			FriendApp.fileHandler.deleteFriend(f);
