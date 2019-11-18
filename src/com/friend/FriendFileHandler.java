@@ -177,6 +177,7 @@ public class FriendFileHandler implements Closeable {
 				raf.seek(next);
 				b.read(raf);
 				b.setPrev(loc);
+				raf.seek(next);
 				b.write(raf);
 			}
 			//If freepointer = datapointer
