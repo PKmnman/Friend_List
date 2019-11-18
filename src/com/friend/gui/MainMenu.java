@@ -5,21 +5,20 @@ import com.friend.Friend;
 import com.friend.PhoneNumber;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,8 +47,7 @@ public class MainMenu extends BorderPane {
 	@FXML private TableColumn<Friend, PhoneNumber> phoneNumberColumn;
 	
 	@FXML private ContextMenu tableContextMenu;
-	
-	private ObservableList<Friend> friends;
+	@FXML private ListProperty<Friend> friends;
 	
 	/**
 	 * Default constructor for that constructs and loads the main menu UI.
@@ -80,14 +78,12 @@ public class MainMenu extends BorderPane {
 			//Handle any load exceptions and exit
 			System.err.printf("[%s] <SEVERE> Failed to load FXML file \"%s\"%n", getClass().getSimpleName(), FXML_FILE.getFile());
 			System.err.printf("[%s] <SEVERE> Caused by: \"%s\"%n", getClass().getSimpleName(), e.getCause());
+			System.err.println();
+			e.printStackTrace();
 			Platform.exit();
 			System.exit(-1);
 		}
 		
-		//Setup the table display
-		firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-		lastNameColumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-		phoneNumberColumn.setCellValueFactory(new PropertyValueFactory<>("phoneNumber"));
 		
 		//This adds the context menu to each row
 		displayTable.setRowFactory(p -> {
@@ -96,7 +92,18 @@ public class MainMenu extends BorderPane {
 			return row;
 		});
 		
-		displayTable.setItems(loadRecords());
+		loadRecords();
+		displayTable.itemsProperty().bind(friends);
+		
+		//This listener will update the friend file whenever a change is made
+		friends.addListener((ListChangeListener<Friend>) c -> {
+			while(c.next()){
+				if(c.wasRemoved()){
+					FriendApp.fileHandler.deleteFriend(c.getRemoved().get(0));
+				}
+			}
+		});
+		
 		displayTable.refresh();
 		//TODO: Load the "Add/Edit Friend" dialog
 	}
@@ -106,49 +113,47 @@ public class MainMenu extends BorderPane {
 	 * @param e the event fired
 	 */
 	public void onDeleteAction(ActionEvent e){
-		Friend f = displayTable.getSelectionModel().getSelectedItem();
-		System.out.println("Deleting " + f.getFirstName() + " " + f.getLastName());
-		friends.remove(f);
-		
-		//Delete from file
-		FriendApp.fileHandler.deleteFriend(f);
+		if(!friends.isEmpty()){
+			Friend f = displayTable.getSelectionModel().getSelectedItem();
+			System.out.println("Deleting " + f.getFirstName() + " " + f.getLastName());
+			friends.remove(f);
+			
+			displayTable.refresh();
+		}
 	}
 
 	public void onAddAction(ActionEvent event){
-		AddDialog dialog = new AddDialog();
-		dialog.autosize();
-		Scene scene = new Scene(dialog);
-		Stage stage = new Stage(StageStyle.UTILITY);
+		AddDialog dialog = new AddDialog(this);
+		dialog.showAndWait();
 		
-		stage.sizeToScene();
-		stage.setResizable(false);
-		
-		stage.initOwner(this.getScene().getWindow());
-		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setScene(scene);
-		stage.showAndWait();
-		
-		
+		//Only add if the friend being added is valid
+		if(dialog.isComplete()){
+			Friend f = new Friend(dialog.getFirstName(), dialog.getLastName(), dialog.getPhoneNumber());
+			FriendApp.fileHandler.addFriend(f);
+			friends.add(f);
+		}
 		
 	}
 	
-	ObservableList<Friend> loadRecords(){
-		friends = FXCollections.observableArrayList();
+	private ObservableList<Friend> loadRecords() {
+		friends = new SimpleListProperty<>(this, "friends", FXCollections.observableArrayList());
 		
 		Block b = new Block();
-		while (b != null){
+		while (b != null) {
 			b = FriendApp.fileHandler.read();
 			
-			if(b == null || b.isDeleted()){
+			if (b == null || b.isDeleted()) {
 				break;
 			}
 			
 			friends.add(b.getData());
 		}
 		
-		//friends.add(new Friend("Johny", "Test", "0023456978"));
-		
 		return friends;
 	}
-
+	
+	public ObservableList<Friend> getFriends(){
+		return friends;
+	}
+	
 }

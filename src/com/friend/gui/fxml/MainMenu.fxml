@@ -3,82 +3,84 @@
 <!--Imports-->
 
 <!--Main GUI Stuff-->
-
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.*?>
 <fx:root minHeight="400" minWidth="600" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.172-ea"
          xmlns:fx="http://javafx.com/fxml/1">
-    <fx:define>
-        <ContextMenu fx:id="tableContextMenu">
-            <items>
-                <MenuItem mnemonicParsing="false" text="Edit..."/>
-                <MenuItem onAction="#onDeleteAction" mnemonicParsing="false" text="Delete..."/>
-            </items>
-        </ContextMenu>
-    </fx:define>
-
     <top>
-        <HBox>
-            <MenuButton text="File" contentDisplay="CENTER">
-                <Menu text="File">
-                    <MenuItem text="New..."/>
-                    <MenuItem text="Open..."/>
-                    <MenuItem text="Load..."/>
-                </Menu>
-            </MenuButton>
-        </HBox>
+        <fx:define>
+            <ContextMenu fx:id="tableContextMenu">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="Edit..."/>
+                    <MenuItem onAction="#onDeleteAction" mnemonicParsing="false" text="Delete..."/>
+                </items>
+            </ContextMenu>
+            <FXCollections fx:id="list" fx:factory="observableArrayList"/>
+        </fx:define>
+        <GridPane BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="468.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" minWidth="10.0" prefWidth="116.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <TextField GridPane.rowIndex="1" />
+                <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            </children>
+            <padding>
+                <Insets left="16.0" right="16.0" />
+            </padding>
+        </GridPane>
     </top>
+
    <center>
        <!--This is the code for the main table display-->
-      <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minViewportHeight="200.0" minViewportWidth="570.0" minWidth="-Infinity" prefHeight="200.0" prefViewportHeight="200.0" prefViewportWidth="570.0" BorderPane.alignment="CENTER">
-         <content>
-            <TableView fx:id="displayTable" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="554.0">
-              <columns>
-                  <TableColumn fx:id="firstNameColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="First Name"/>
-                  <TableColumn fx:id="lastNameColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="Last Name"/>
-                  <TableColumn fx:id="phoneNumberColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="283" resizable="false" text="Phone Number"/>
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
-         </content>
-         <BorderPane.margin>
-            <Insets left="16.0" right="16.0" />
-         </BorderPane.margin>
-      </ScrollPane>
+       <ScrollPane fitToHeight="true" fitToWidth="true" minHeight="-Infinity" minViewportHeight="200.0" minViewportWidth="570.0" minWidth="-Infinity"
+                   prefHeight="200.0" prefViewportHeight="200.0" prefViewportWidth="570.0" BorderPane.alignment="CENTER">
+           <TableView fx:id="displayTable" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="554.0">
+               <columns>
+                   <TableColumn fx:id="firstNameColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="First Name">
+                       <cellValueFactory>
+                           <PropertyValueFactory property="firstName"/>
+                       </cellValueFactory>
+
+                   </TableColumn>
+                   <TableColumn fx:id="lastNameColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="150.0" resizable="false" text="Last Name">
+                       <cellValueFactory>
+                           <PropertyValueFactory property="lastName"/>
+                       </cellValueFactory>
+                   </TableColumn>
+                   <TableColumn fx:id="phoneNumberColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="283" resizable="false" text="Phone Number">
+                       <cellValueFactory>
+                           <PropertyValueFactory property="phoneNumber"/>
+                       </cellValueFactory>
+                   </TableColumn>
+               </columns>
+              <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+              </columnResizePolicy>
+           </TableView>
+       </ScrollPane>
    </center>
+
    <bottom>
       <HBox alignment="CENTER_RIGHT" minHeight="58.0" minWidth="300.0" spacing="12.0" BorderPane.alignment="CENTER">
          <children>
             <Button onAction="#onAddAction" text="Add Friend..." />
-             <Button mnemonicParsing="false" text="Edit Friend..." />
-            <Button onAction="#onDeleteAction" mnemonicParsing="false" text="Delete..." />
+            <Button onAction="#onDeleteAction" mnemonicParsing="false" text="Delete..."/>
          </children>
          <padding>
             <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
          </padding>
       </HBox>
    </bottom>
-   <top>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="468.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="Infinity" minWidth="10.0" prefWidth="116.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="-Infinity" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <TextField GridPane.rowIndex="1" />
-            <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Search" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-         </children>
-         <padding>
-            <Insets left="16.0" right="16.0" />
-         </padding>
-      </GridPane>
-   </top>
+
+
 </fx:root>

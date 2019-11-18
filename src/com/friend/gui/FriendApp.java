@@ -42,6 +42,12 @@ public class FriendApp extends Application {
 		primaryStage.show();
 	}
 	
+	@Override
+	public void stop() throws Exception {
+		fileHandler.close();
+		super.stop();
+	}
+	
 	private static void initFriendData() {
 		URL friendDataFile = FriendApp.class.getResource("/files/testFile.dat");
 		if(friendDataFile == null){

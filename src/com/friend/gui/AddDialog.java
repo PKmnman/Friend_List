@@ -1,13 +1,20 @@
 package com.friend.gui;
 
-import com.friend.Friend;
 import com.friend.PhoneNumber;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.io.IOException;
@@ -26,13 +33,19 @@ class AddDialog extends VBox {
 	 */
 	private static final Pattern NUM_PATTERN = Pattern.compile("((\\(\\d{3}\\))|(\\d{3}))-\\d{3}-\\d{4}");
 	
-	private Friend newFriend;
-	
 	@FXML private TextField firstNameField;
 	@FXML private TextField lastNameField;
 	@FXML private TextField phoneNumberField;
 	
-	AddDialog(){
+	private ObjectProperty<MainMenu> parentMenu;
+	
+	private BooleanProperty complete;
+	
+	private Stage stage;
+	
+	AddDialog(MainMenu parent){
+		parentMenu = new SimpleObjectProperty<>(this, "parent menu", parent);
+		
 		try {
 			//Create a FXMLLoader and set "this" as it's root and controller
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/friend/gui/fxml/AddDialog.fxml"));
@@ -48,6 +61,19 @@ class AddDialog extends VBox {
 			System.exit(-1);
 		}
 		
+		Scene owner  = new Scene(this);
+		
+		stage = new Stage();
+		stage.setScene(owner);
+		stage.setTitle("Add Friend...");
+		stage.setResizable(false);
+		stage.initOwner(parent.getScene().getWindow());
+		stage.initModality(Modality.APPLICATION_MODAL);
+		
+		complete = new SimpleBooleanProperty(this, "complete");
+		
+		complete.bind(firstNameField.textProperty().isNotEmpty().and(lastNameField.textProperty().isNotEmpty()).and(phoneNumberField.textProperty().isNotEmpty()));
+		
 		TextFormatter<PhoneNumber> formatter = new TextFormatter<PhoneNumber>(
 				new StringConverter<PhoneNumber>() {
 					@Override
@@ -60,27 +86,42 @@ class AddDialog extends VBox {
 						return new PhoneNumber(string);
 					}
 				},
-				new PhoneNumber("0000000000")
+				null
 		);
+		
+		phoneNumberField.setTextFormatter(formatter);
 	}
 	
-	private TextFormatter.Change filterInput(TextFormatter.Change change){
-		if (!change.isContentChange() && !change.getControlNewText().isEmpty()) {
-			return change;
-		}
+	public void showAndWait(){
+		stage.showAndWait();
 		
-		String text = change.getControlNewText();
-		int start = change.getRangeStart();
-		int end = change.getRangeEnd();
-		int anchor = change.getAnchor();
-		
-		StringBuffer newText = new StringBuffer(text);
-		
-		
-		
-		return change;
 	}
-
-
+	
+	@FXML private void onCancel(ActionEvent e){
+		complete.setValue(false);
+		stage.hide();
+	}
+	
+	@FXML private void onConfirm(ActionEvent e){
+		if(isComplete()){
+			stage.hide();
+		}
+	}
+	
+	public boolean isComplete() {
+		return this.complete.getValue();
+	}
+	
+	public String getFirstName(){
+		return firstNameField.textProperty().getValueSafe();
+	}
+	
+	public String getLastName(){
+		return lastNameField.textProperty().getValueSafe();
+	}
+	
+	public PhoneNumber getPhoneNumber(){
+		return ((TextFormatter<PhoneNumber>) phoneNumberField.getTextFormatter()).getValue();
+	}
 
 }

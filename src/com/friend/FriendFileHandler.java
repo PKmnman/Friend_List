@@ -27,7 +27,7 @@ public class FriendFileHandler implements Closeable {
 			raf.seek(0);
 		}
 		
-		curr = null;
+		curr = new Block();
 		dataPointer = raf.readLong();
 		freePointer = raf.readLong();
 		loc = dataPointer;
@@ -158,13 +158,17 @@ public class FriendFileHandler implements Closeable {
 			if (prev > -1) {
 				raf.seek(prev);
 				b.read(raf);
-				b.setNext(loc);
-				raf.seek(prev);
-				b.write(raf);
+				//Check that the next block isn't already linked
+				if(b.getNext() != freePointer){
+					b.setNext(freePointer);
+					//Write block
+					raf.seek(prev);
+					b.write(raf);
+				}
 			}
 
 			//Edit the next Block to update its prev data
-			if (prev > -1) {
+			if (next > -1) {
 				raf.seek(next);
 				b.read(raf);
 				b.setPrev(loc);
@@ -178,8 +182,6 @@ public class FriendFileHandler implements Closeable {
 
 			//Locate next free block
 			long fP = searchNextFree();
-			//Update DP and FP
-			//TODO: DP shouldn't necessarily change on every insert
 			freePointer = fP;
 
 
@@ -211,14 +213,43 @@ public class FriendFileHandler implements Closeable {
 	private long searchNextFree(){
 		try{
 			raf.seek(16);
-			while (true){
-				loc = raf.getFilePointer();
+			
+			Block next;
+			Block prev;
+			
+			do{
+				loc = getFilePointer();
 				curr.read(raf);
-				if (curr.isDeleted()){
-					freePointer = loc;
+				
+				next = null; prev = null;
+				
+				if(curr.getPrev() >= 16){
+					raf.seek(curr.getPrev());
+					prev = new Block();
+					prev.read(raf);
+				}
+				
+				if(curr.getNext() >= 16 + Block.BYTES){
+					raf.seek(curr.getNext());
+					next = new Block();
+					next.read(raf);
+				}
+				
+				if((next != null) && (next.getPrev() != loc)){
+					return loc;
+				}else if (next == null){
+					return loc + Block.BYTES;
+				}
+				
+				if((prev != null) && (prev.getNext() != loc)){
 					return loc;
 				}
-			}
+				
+				raf.seek(loc + Block.BYTES);
+				
+			}while (curr.getNext() != -1);
+			
+			return loc;
 		} catch (EOFException e){
 			return -1;
 		} catch (IOException e) {

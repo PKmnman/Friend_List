@@ -26,20 +26,20 @@ public class TestDriver {
 			
 		//Create the file and populate it with blocks
 		//createFile(file);
-		System.out.println("Blocks written to file!\n");
+		//System.out.println("Blocks written to file!\n");
 		
 		//Close the file
-		file.close();
+		//file.close();
 
 		//Re-open File
-		file = new FriendFileHandler(test.toPath().toString());
+		//file = new FriendFileHandler(test.toPath().toString());
 		
 		//Read and print to std::out
 		//read(file);
 		//Seek to beginning
 		
 		
-		System.out.println("\nAdding new friend\n");
+		/*System.out.println("\nAdding new friend\n");
 		Friend f = new Friend("Jayne", "Doe", "2031122200");
 		
 		//Add friends
@@ -54,10 +54,11 @@ public class TestDriver {
 		file.close();
 		
 		//Re-open the file for reading
-		file = new FriendFileHandler(test.toPath().toString());
-		//read(file);
+		file = new FriendFileHandler(test.toPath().toString());*/
+		read(file);
 		
 		System.out.println("\nDone!!!");
+		file.close();
 
 	}
 	
